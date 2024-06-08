@@ -152,12 +152,12 @@
             $watch('lang', value => isArabic = lang == 'ar')">
 
             <div x-bind:dir="isArabic ? 'rtl': 'ltr'"
-              class="modal-box w-11/12 max-w-5xl shadow-[0_35px_60px_5px_rgba(0,0,0,0.3)]">
+              class="modal-box w-96 shadow-[0_35px_60px_5px_rgba(0,0,0,0.3)]">
               <form method="dialog">
                 <button class="btn btn-sm btn-circle btn-ghost absolute top-2"
                   x-bind:class="isArabic ? 'left-2' : 'right-2'">✕</button>
               </form>
-              <div class="flex gap-4 items-center">
+              <div class="flex gap-4 items-center justify-center">
                 <img x-show="companyOrBrand.Logo" x-bind:src="'data:image/png;base64,' + companyOrBrand.Logo"
                   class="h-16" />
                 <div class="flex flex-col">
@@ -169,9 +169,9 @@
                   <span x-text="parent.Category"></span> -->
               </div>
 
-              <p class="py-4" x-text="tierDescription"></p>
+              <p class="py-4 text-justify" x-text="tierDescription"></p>
 
-              <p class="py-4" x-html="descriptionIntro + description + descriptionOutro"></p>
+              <p class="py-4 text-justify" x-html="descriptionIntro + description + descriptionOutro"></p>
 
               <!-- <template x-if="childCompanies.length > 0">
                 <div class="flex flex-col gap-2">
