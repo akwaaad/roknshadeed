@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html x-data="{
+    lang: 'en',
+    title: {
+        ar: 'ركن شديد',
+        en: 'Rokn Shadeed'
+    },
+    darkMode: window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+}" x-init="window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+    darkMode = event.matches;
+});">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="manifest" href="manifest.webmanifest">
+
+  <title x-data x-text="title[lang]">ركن شديد</title>
+  <script src="scripts/alpine.js" defer></script>
+  <script src="scripts/index.js"></script>
+
+  <link href="styles/daisy.min.css" rel="stylesheet" type="text/css" />
+  <link href="styles/styles.min.css" rel="stylesheet" type="text/css" />
+  <style>
+    @font-face {
+      font-family: "29LT Kaff";
+      src: url("fonts/29LT Kaff Black.ttf") format("truetype");
+      font-weight: bolder;
+    }
+
+    @font-face {
+      font-family: "29LT Kaff";
+      src: url("fonts/29LT Kaff Semibold.ttf") format("truetype");
+      font-weight: bold;
+    }
+
+    @font-face {
+      font-family: "29LT Kaff";
+      src: url("fonts/29LT Kaff.ttf") format("truetype");
+      font-weight: normal;
+    }
+
+    @font-face {
+      font-family: "29LT Kaff";
+      src: url("fonts/29LT Kaff Ultralight.ttf") format("truetype");
+      font-weight: lighter;
+    }
+
+    body {
+      font-family: "29LT Kaff";
+    }
+  </style>
+</head>
+
+<body class="container mx-auto min-h-screen" x-data="app">
+  <template x-if="!loaded">
+    <h1>Loading...</h1>
+  </template>
+  <template x-if="loaded">
+    <div class="min-h-screen">
+      <div class="flex justify-end gap-6 pt-5 pr-3 md:pr-0">
+        <a href="#" x-on:click="lang = 'en'" x-bind:class="lang == 'en' ? 'font-bold' : ''">English</a>
+        <a href="#" x-on:click="lang = 'ar'" x-bind:class="lang == 'ar' ? 'font-bold' : ''">عربي</a>
+      </div>
+      <div class="flex justify-center mt-16 md:mt-32">
+        <img x-data="{ logo: data.Essentials.find(row => row.Keyword == (darkMode ? 'L.L.U.W' : 'D.L.U.W')).Value }"
+          x-init="$watch('darkMode', value => logo = data.Essentials.find(row => row.Keyword == (darkMode ? 'L.L.U.W' : 'D.L.U.W')).Value)"
+          x-bind:src="'data:image/png;base64,' + logo" class="h-20" alt="Logo" />
+      </div>
+      <div x-data="{ searchQuery: '' }" class="mx-auto max-w-[584px] p-3 md:p-0">
+        <div class="flex justify-center mt-6">
+          <label
+            class="input input-bordered flex items-center gap-2 rounded-full hover:drop-shadow-[0_0px_3px_rgba(0,0,0,0.25)] !outline-none max-w-[584px] grow">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-5 h-5 opacity-70">
+              <path fill-rule="evenodd"
+                d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
+                clip-rule="evenodd" />
+            </svg>
+            <input type="text" class="grow" x-model="searchQuery" />
+          </label>
+        </div>
+        <div class="overflow-x-auto mt-2" x-show="searchQuery.length > 0" x-init="$watch('searchQuery', value => {
+  companiesAndBrands = findClosestMatches(
+    value,
+    data.Parent.slice(1).concat(data.Brands.slice(1)),
+    companyOrBrand => companyOrBrand.Brand || companyOrBrand.Company
+  );
+});
+" x-data="{
+              companiesAndBrands: [],
+              selectedCompanyOrBrand: null,
+              tierColor: {
+                '1st': 'badge-error',
+                '2nd': 'bg-orange-400 border-orange-400',
+                '3rd': 'bg-yellow-300 border-yellow-300'
+              },
+            }">
+          <table class="table">
+            <thead>
+              <tr>
+                <th x-text="lang == 'ar' ? 'اسم الشركة' : 'Company / Brand'"></th>
+                <th class="flex justify-end" x-text="lang == 'ar' ? 'مستوى الدعم' : 'Support Tier'"></th>
+              </tr>
+            <tbody>
+              <template x-for="companyOrBrand in companiesAndBrands"
+                :key="companyOrBrand.Company+'-'+(companyOrBrand.Brand || '')">
+                <tr x-data="{
+                    parent: companyOrBrand.Brand ? data.Parent.find(row => row.Company == companyOrBrand.Company) : null,
+                    brand: companyOrBrand.Brand,
+                    company: companyOrBrand.Company,
+                  }" class="hover:bg-gray-100 hover:cursor-pointer"
+                  x-on:click="selectedCompanyOrBrand = {parent, companyOrBrand}, detailsModal.show()">
+                  <td x-html="(brand ? '<b>' + brand + '</b> by ' + company : '<b>' + company + '</b>')"></td>
+                  <td class="flex justify-end items-center">
+                    <div class="badge badge-md" x-bind:class="tierColor[companyOrBrand.Tier || parent.Tier]"></div>
+                  </td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+          <dialog id="detailsModal" class="modal" x-data="{
+              isArabic: lang == 'ar',
+              isParent: null,
+              parent: null,
+              childCompanies: [],
+              alternativeCompanies: [],
+              companyOrBrand: null,
+              description: null,
+              descriptionIntro: null,
+              descriptionOutro: null,
+              tierDescription : null,
+              tierLevelAr: {
+                '1st': 'درجة أولى',
+                '2nd': 'درجة ثانية',
+                '3rd': 'درجة ثالثة',
+              }
+            }" x-init="$watch('selectedCompanyOrBrand', ({ parent: _parent, companyOrBrand: _companyOrBrand }) => {
+              isParent = !_parent
+              parent = _parent || _companyOrBrand
+              companyOrBrand = _companyOrBrand
+              description = isArabic ? parent['Description'] : parent['Description (en)']
+              descriptionIntro = !isParent ? ((isArabic ? 'جاء عن الشركة الأم ' : 'In news about the parent company ') + parent.Company + '<br><br>') : ''
+              descriptionOutro = '<br><br>' + ' <a class=\'text-blue-500 font-bold\' href=' + parent['Proof'] + '>' + (isArabic ? 'المصدر' : 'Source') + '</a><br><br>'
+              tierDescription = data.Tiers.find(t => t.Tier == parent.Tier)[isArabic ? 'Description' : 'Description (en)']
+
+              childCompanies = data.Brands.filter(row => row.Company == parent.Company)
+              alternativeCompanies = companyOrBrand['Alt Type'] ? data.Alt.filter(row => row['Alt Type'] == companyOrBrand['Alt Type']) : []
+            });
+            $watch('lang', value => isArabic = lang == 'ar')">
+
+            <div x-bind:dir="isArabic ? 'rtl': 'ltr'"
+              class="modal-box w-11/12 max-w-5xl shadow-[0_35px_60px_5px_rgba(0,0,0,0.3)]">
+              <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost absolute top-2"
+                  x-bind:class="isArabic ? 'left-2' : 'right-2'">✕</button>
+              </form>
+              <div class="flex gap-4 items-center">
+                <img x-show="companyOrBrand.Logo" x-bind:src="'data:image/png;base64,' + companyOrBrand.Logo"
+                  class="h-16" />
+                <div class="flex flex-col">
+                  <h3 class="font-extrabold text-red-500 text-xl" x-text="companyOrBrand.Brand || parent.Company"></h3>
+                  <div class="badge badge-md text-white font-bold px-4" x-bind:class="tierColor[parent.Tier]"
+                    x-text="isArabic ? tierLevelAr[parent.Tier] : parent.Tier + ' Tier'"></div>
+                </div>
+                <!-- &centerdot;
+                  <span x-text="parent.Category"></span> -->
+              </div>
+
+              <p class="py-4" x-text="tierDescription"></p>
+
+              <p class="py-4" x-html="descriptionIntro + description + descriptionOutro"></p>
+
+              <!-- <template x-if="childCompanies.length > 0">
+                <div class="flex flex-col gap-2">
+                  <h4 x-text="isArabic ? 'الشركات الفرعية' : 'Child Companies'"></h4>
+                  <div class="flex flex-col gap-2">
+                    <template x-for="childCompany in childCompanies">
+                      <div class="flex gap-4 items-center">
+                        <img x-bind:src="'data:image/png;base64,' + childCompany.Logo" x-show="childCompany.Logo"
+                          class="h-8" />
+                        <h4 x-text="childCompany.Brand"></h4>
+                      </div>
+                    </template>
+                  </div>
+                </div>
+              </template> -->
+
+              <template x-if="alternativeCompanies.length > 0">
+                <div class="flex flex-col gap-2">
+                  <h4 x-text="isArabic ? 'الشركات البديلة' : 'Alternative Companies'"></h4>
+                  <div class="flex flex-col gap-2">
+                    <template x-for="alternativeCompany in alternativeCompanies">
+                      <div class="flex gap-4 items-center">
+                        <img x-bind:src="'data:image/png;base64,' + alternativeCompany.Logo"
+                          x-show="alternativeCompany.Logo" class="h-8" />
+                        <h4 x-text="alternativeCompany.Alt"></h4>
+                      </div>
+                    </template>
+                  </div>
+                </div>
+              </template>
+            </div>
+            <form method="dialog" class="modal-backdrop bg-opacity-80 bg-white">
+              <button>close</button>
+            </form>
+          </dialog>
+        </div>
+      </div>
+      <footer class="footer footer-center sticky top-[100vh] pb-10">
+        <nav>
+          <div class="flex gap-4">
+            <template x-for="link in data.Links.slice(1)">
+              <a x-bind:href="link.Link">
+                <img x-bind:src="'data:image/png;base64,' + (darkMode ? link['DM Logo'] : link.Logo)" class="h-6" />
+              </a>
+          </div>
+        </nav>
+      </footer>
+    </div>
+  </template>
+
+  <div>
+    <style>
+      #install {
+        position: fixed;
+        top: 15;
+        display: none;
+        left: 15;
+        height: 45px;
+        width: 45px;
+      }
+    </style>
+    <a id="install" href="#" x-text="lang == 'ar' ? 'تثبيت الموقع كتطبيق' : 'Install as App'"></a>
+  </div>
+</body>
+
+</html>

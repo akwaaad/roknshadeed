@@ -1,0 +1,22 @@
+{
+  "description": "ركن شديد",
+  "display": "fullscreen",
+  "icons": [
+    {
+      "src": "android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
+  "name": "ركن شديد",
+  "short_name": "ركن شديد",
+  "start_url": "https://akwaaad.github.io/roknshadeed/",
+  "scope": "https://akwaaad.github.io/roknshadeed/"
+}
