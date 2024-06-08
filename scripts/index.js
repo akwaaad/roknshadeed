@@ -5,25 +5,25 @@ if ("serviceWorker" in navigator) {
   });
 }
 
-var deferredPrompt;
-window.addEventListener("beforeinstallprompt", (e) => {
-  // Prevents the default mini-infobar or install dialog from appearing on mobile
-  e.preventDefault();
-  // Save the event because you'll need to trigger it later.
-  deferredPrompt = e;
-  // Show your customized install prompt for your PWA
-  // Your own UI doesn't have to be a single element, you
-  // can have buttons in different locations, or wait to prompt
-  // as part of a critical journey.
-  showInAppInstallPromotion();
-});
+// var deferredPrompt;
+// window.addEventListener("beforeinstallprompt", (e) => {
+//   // Prevents the default mini-infobar or install dialog from appearing on mobile
+//   e.preventDefault();
+//   // Save the event because you'll need to trigger it later.
+//   deferredPrompt = e;
+//   // Show your customized install prompt for your PWA
+//   // Your own UI doesn't have to be a single element, you
+//   // can have buttons in different locations, or wait to prompt
+//   // as part of a critical journey.
+//   showInAppInstallPromotion();
+// });
 
-function showInAppInstallPromotion() {
-  document.getElementById("install").addEventListener("click", (e) => {
-    deferredPrompt.prompt();
-  });
-  document.getElementById("install").style.display = "block";
-}
+// function showInAppInstallPromotion() {
+//   document.getElementById("install").addEventListener("click", (e) => {
+//     deferredPrompt.prompt();
+//   });
+//   document.getElementById("install").style.display = "block";
+// }
 
 document.addEventListener("alpine:init", () =>
   Alpine.data("app", () => {
