@@ -5,6 +5,7 @@
         ar: 'ركن شديد',
         en: 'Rokn Shadeed'
     },
+    installable: false,
     darkMode: window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
 }" x-init="window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
     darkMode = event.matches;
@@ -60,13 +61,44 @@
   </template>
   <template x-if="loaded">
     <div class="min-h-screen">
-      <div class="flex justify-end gap-6 pt-5 pr-3 md:pr-0">
-        <a href="#" x-on:click="lang = 'en'" x-bind:class="lang == 'en' ? 'font-bold' : ''">English</a>
-        <a href="#" x-on:click="lang = 'ar'" x-bind:class="lang == 'ar' ? 'font-bold' : ''">عربي</a>
+      <div class="drawer drawer-end">
+        <input id="my-drawer-3" type="checkbox" class="drawer-toggle" /> 
+        <div class="drawer-content flex flex-col">
+          <!-- Navbar -->
+          <div class="w-full navbar">
+            <div class="flex-1 px-2 mx-2">
+              <img x-data="{ logo: data.Essentials.find(row => row.Keyword == (darkMode ? 'L.L.S' : 'D.L.S')).Value }"
+                x-init="$watch('darkMode', value => logo = data.Essentials.find(row => row.Keyword == (darkMode ? 'L.L.S' : 'D.L.S')).Value)"
+                x-bind:src="'data:image/png;base64,' + logo" class="h-10" alt="Logo" />
+            </div>
+            <div class="flex-none hidden lg:block">
+              <ul class="menu menu-horizontal">
+                <!-- Navbar menu content here -->
+                <li><a x-on:click="deferredPrompt.prompt()" x-show="$store.installable" href="#" x-text="lang == 'ar' ? 'تثبيت الموقع كتطبيق' : 'Install as App'"></a></li>
+                <li><a href="#" x-on:click="lang = 'en'" x-bind:class="lang == 'en' ? 'font-bold' : ''">English</a></li>
+                <li><a href="#" x-on:click="lang = 'ar'" x-bind:class="lang == 'ar' ? 'font-bold' : ''">عربي</a></li>
+              </ul>
+            </div>
+            <div class="flex-none lg:hidden">
+              <label for="my-drawer-3" aria-label="open sidebar" class="btn btn-square btn-ghost">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-6 h-6 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+              </label>
+            </div> 
+          </div>
+        </div> 
+        <div class="drawer-side z-10">
+          <label for="my-drawer-3" aria-label="close sidebar" class="drawer-overlay"></label> 
+          <ul class="menu p-4 w-80 min-h-full bg-base-200">
+            <!-- Sidebar content here -->
+            <li><a x-on:click="deferredPrompt.prompt()" x-show="$store.installable" href="#" x-text="lang == 'ar' ? 'تثبيت الموقع كتطبيق' : 'Install as App'"></a></li>
+            <li><a href="#" x-on:click="lang = 'en'" x-bind:class="lang == 'en' ? 'font-bold' : ''">English</a></li>
+            <li><a href="#" x-on:click="lang = 'ar'" x-bind:class="lang == 'ar' ? 'font-bold' : ''">عربي</a></li>
+          </ul>
+        </div>
       </div>
       <div class="flex justify-center mt-16 md:mt-32">
-        <img x-data="{ logo: data.Essentials.find(row => row.Keyword == (darkMode ? 'L.L.U.W' : 'D.L.U.W')).Value }"
-          x-init="$watch('darkMode', value => logo = data.Essentials.find(row => row.Keyword == (darkMode ? 'L.L.U.W' : 'D.L.U.W')).Value)"
+        <img x-data="{ logo: data.Essentials.find(row => row.Keyword == (darkMode ? 'L.L.W' : 'D.L.W')).Value }"
+          x-init="$watch('darkMode', value => logo = data.Essentials.find(row => row.Keyword == (darkMode ? 'L.L.W' : 'D.L.W')).Value)"
           x-bind:src="'data:image/png;base64,' + logo" class="h-20" alt="Logo" />
       </div>
       <div x-data="{ searchQuery: '' }" class="mx-auto max-w-[584px] p-3 md:p-0">
@@ -220,20 +252,6 @@
       </footer>
     </div>
   </template>
-
-  <!-- <div>
-    <style>
-      #install {
-        position: fixed;
-        top: 15;
-        display: none;
-        left: 15;
-        height: 45px;
-        width: 45px;
-      }
-    </style>
-    <a id="install" href="#" x-text="lang == 'ar' ? 'تثبيت الموقع كتطبيق' : 'Install as App'"></a>
-  </div> -->
 </body>
 
 </html>
