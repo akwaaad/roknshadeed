@@ -1,3 +1,31 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: "29LT Kaff";
+  src: url("../fonts/29LT Kaff Black.ttf") format("truetype");
+  font-weight: bolder;
+}
+
+@font-face {
+  font-family: "29LT Kaff";
+  src: url("../fonts/29LT Kaff Semibold.ttf") format("truetype");
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: "29LT Kaff";
+  src: url("../fonts/29LT Kaff.ttf") format("truetype");
+  font-weight: normal;
+}
+
+/* @font-face {
+  font-family: "29LT Kaff";
+  src: url("../fonts/29LT Kaff Ultralight.ttf") format("truetype");
+  font-weight: lighter;
+} */
+
+body {
+  font-family: "29LT Kaff";
+}
