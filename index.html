@@ -8,7 +8,7 @@
     darkMode: window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
 }" x-init="window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
     darkMode = event.matches;
-});">
+});" x-bind:data-theme="darkMode ? 'dark' : 'light'">
 
 <head>
   <meta charset="UTF-8" />
@@ -22,7 +22,6 @@
   <script src="scripts/alpine.js" defer></script>
   <script src="scripts/index.js"></script>
 
-  <link href="styles/daisy.min.css" rel="stylesheet" type="text/css" />
   <link href="styles/styles.min.css" rel="stylesheet" type="text/css" />
   <style>
     @font-face {
@@ -203,7 +202,7 @@
                 </div>
               </template>
             </div>
-            <form method="dialog" class="modal-backdrop bg-opacity-80 bg-white">
+            <form method="dialog" class="modal-backdrop bg-opacity-80 bg-base-100">
               <button>close</button>
             </form>
           </dialog>
