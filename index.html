@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html x-data="{
-    lang: 'en',
+    lang: localStorage.getItem('lang') || 'en',
     title: {
         ar: 'ركن شديد',
         en: 'Rokn Shadeed'
@@ -9,7 +9,8 @@
     darkMode: window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
 }" x-init="window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
     darkMode = event.matches;
-});">
+});
+$watch('lang', value => localStorage.setItem('lang', value));">
 
 <head>
   <meta charset="UTF-8" />
@@ -182,7 +183,7 @@
 
               <p class="py-4 text-justify" x-html="descriptionIntro + description + descriptionOutro"></p>
 
-              <!-- <template x-if="childCompanies.length > 0">
+              <template x-if="isParent && childCompanies.length > 0">
                 <div class="flex flex-col gap-2">
                   <h4 x-text="isArabic ? 'الشركات الفرعية' : 'Child Companies'"></h4>
                   <div class="flex flex-col gap-2">
@@ -195,7 +196,7 @@
                     </template>
                   </div>
                 </div>
-              </template> -->
+              </template>
 
               <template x-if="alternativeCompanies.length > 0">
                 <div class="flex flex-col gap-2">
