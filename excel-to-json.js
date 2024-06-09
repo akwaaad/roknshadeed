@@ -1,4 +1,5 @@
 const ExcelJS = require("exceljs");
+const fflate = require("fflate");
 
 async function main() {
   const workbook = new ExcelJS.Workbook();
@@ -37,7 +38,13 @@ async function main() {
     outputJSON[sheetName] = sheetData;
   }
 
-  require("fs").writeFileSync("./data.json", JSON.stringify(outputJSON));
+  require("fs").writeFileSync(
+    "./data.json",
+    fflate.compressSync(fflate.strToU8(JSON.stringify(outputJSON)), {
+      level: 6,
+      mem: 8,
+    })
+  );
 }
 
 main();

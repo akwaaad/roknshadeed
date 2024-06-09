@@ -30,9 +30,17 @@ document.addEventListener("alpine:init", () => {
       data: {},
 
       async init() {
-        data = await (await fetch("./data.json")).json();
-        this.data = data;
-        this.loaded = true;
+        let compressed = await fetch("./data.json").then((res) =>
+          res.arrayBuffer()
+        );
+        fflate.decompress(new Uint8Array(compressed), {}, (err, data) => {
+          if (err) throw err;
+          const decompressed = fflate.strFromU8(data);
+          data = JSON.parse(decompressed);
+
+          this.data = data;
+          this.loaded = true;
+        });
       },
     };
   });
