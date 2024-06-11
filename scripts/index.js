@@ -19,6 +19,9 @@ window.addEventListener("beforeinstallprompt", (e) => {
 });
 
 function showInAppInstallPromotion() {
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  if (!isMobile) return;
+
   Alpine.store("installable", true);
 }
 
