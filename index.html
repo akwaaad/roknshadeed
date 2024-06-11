@@ -128,10 +128,18 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                     ></a>
                   </li>
                   <li>
-                    <details class="dropdown">
-                      <summary class="m-1 btn"></summary>
+                    <div
+                      class="dropdown dropdown-bottom dropdown-end hover:bg-transparent active:!bg-transparent"
+                    >
+                      <div
+                        tabindex="0"
+                        role="button"
+                        class="btn"
+                        x-text="lang == 'en' ? 'English' : 'العربيّة'"
+                      ></div>
                       <ul
-                        class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52"
+                        tabindex="0"
+                        class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-40"
                       >
                         <li>
                           <a
@@ -150,7 +158,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                           >
                         </li>
                       </ul>
-                    </details>
+                    </div>
                   </li>
                 </ul>
               </div>
