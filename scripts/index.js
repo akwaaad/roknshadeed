@@ -5,6 +5,8 @@ if ("serviceWorker" in navigator) {
   });
 }
 
+const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
 var deferredPrompt;
 window.addEventListener("beforeinstallprompt", (e) => {
   // Prevents the default mini-infobar or install dialog from appearing on mobile
@@ -19,9 +21,7 @@ window.addEventListener("beforeinstallprompt", (e) => {
 });
 
 function showInAppInstallPromotion() {
-  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   if (!isMobile) return;
-
   Alpine.store("installable", true);
 }
 
@@ -31,6 +31,7 @@ document.addEventListener("alpine:init", () => {
     return {
       loaded: false,
       data: {},
+      isMobile,
 
       async init() {
         let compressed = await fetch("./data.json").then((res) =>
