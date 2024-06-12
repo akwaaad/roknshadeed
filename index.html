@@ -451,6 +451,13 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                     </div>
                   </div>
                 </template>
+
+                <div class="flex justify-center mt-4">
+                  <a
+                    x-on:click="navigator.share({ title: companyOrBrand.Brand || parent.Company, text: description, url: window.location.href })"
+                    class="btn btn-primary"
+                    x-text="isArabic ? 'مشاركة' : 'Share'"
+                  ></a>
               </div>
               <form
                 method="dialog"
