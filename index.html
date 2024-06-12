@@ -7,12 +7,13 @@
         en: 'Rokn Shadeed'
     },
     installable: false,
-    darkMode: window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+    darkMode: localStorage.getItem('darkMode') === 'true' || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)
 }"
   x-init="window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
     darkMode = event.matches;
 });
 $watch('lang', value => localStorage.setItem('lang', value));"
+  x-bind:data-theme="darkMode ? 'dark' : 'light'"
 >
   <head>
     <meta charset="UTF-8" />
@@ -93,9 +94,9 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                         <!-- this hidden checkbox controls the state -->
                         <input
                           type="checkbox"
-                          value="dark"
+                          x-bind:checked="darkMode"
                           class="theme-controller"
-                          x-on:change="darkMode = $el.checked"
+                          x-on:change="darkMode = $el.checked; localStorage.setItem('darkMode', $el.checked)"
                         />
 
                         <!-- sun icon -->
