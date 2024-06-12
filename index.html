@@ -257,7 +257,6 @@ $watch('lang', value => localStorage.setItem('lang', value));"
           </div>
           <div
             class="overflow-x-auto mt-2"
-            x-show="searchQuery.length > 0"
             x-init="$watch('searchQuery', value => {
   companiesAndBrands = findClosestMatches(
     value,
@@ -276,7 +275,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
               },
             }"
           >
-            <table class="table">
+            <table class="table" x-show="searchQuery.length > 0">
               <thead>
                 <tr>
                   <th
@@ -320,35 +319,56 @@ $watch('lang', value => localStorage.setItem('lang', value));"
               id="detailsModal"
               class="modal"
               x-data="{
-              isArabic: lang == 'ar',
-              isParent: null,
-              parent: null,
-              childCompanies: [],
-              alternativeCompanies: [],
-              companyOrBrand: null,
-              description: null,
-              descriptionIntro: null,
-              descriptionOutro: null,
-              tierDescription : null,
-              tierLevelAr: {
-                '1st': 'درجة أولى',
-                '2nd': 'درجة ثانية',
-                '3rd': 'درجة ثالثة',
-              }
-            }"
+                isArabic: lang == 'ar',
+                isParent: null,
+                parent: null,
+                childCompanies: [],
+                alternativeCompanies: [],
+                companyOrBrand: null,
+                description: null,
+                descriptionIntro: null,
+                descriptionOutro: null,
+                tierDescription : null,
+                tierLevelAr: {
+                  '1st': 'درجة أولى',
+                  '2nd': 'درجة ثانية',
+                  '3rd': 'درجة ثالثة',
+                }
+              }"
               x-init="$watch('selectedCompanyOrBrand', ({ parent: _parent, companyOrBrand: _companyOrBrand }) => {
-              isParent = !_parent
-              parent = _parent || _companyOrBrand
-              companyOrBrand = _companyOrBrand
-              description = isArabic ? parent['Description'] : parent['Description (en)']
-              descriptionIntro = !isParent ? ((isArabic ? 'جاء عن الشركة الأم [' : 'In news about the parent company [') + parent.Company + ']<br><br>') : ''
-              descriptionOutro = '<br><br>' + ' <a class=\'text-blue-500 font-bold\' href=' + parent['Proof'] + '>' + (isArabic ? 'المصدر' : 'Source') + '</a><br><br>'
-              tierDescription = data.Tiers.find(t => t.Tier == parent.Tier)[isArabic ? 'Description' : 'Description (en)']
+                isParent = !_parent
+                parent = _parent || _companyOrBrand
+                companyOrBrand = _companyOrBrand
+                description = isArabic ? parent['Description'] : parent['Description (en)']
+                descriptionIntro = !isParent ? ((isArabic ? 'جاء عن الشركة الأم [' : 'In news about the parent company [') + parent.Company + ']<br><br>') : ''
+                descriptionOutro = '<br><br>' + ' <a class=\'text-blue-500 font-bold\' href=' + parent['Proof'] + '>' + (isArabic ? 'المصدر' : 'Source') + '</a><br><br>'
+                tierDescription = data.Tiers.find(t => t.Tier == parent.Tier)[isArabic ? 'Description' : 'Description (en)']
 
-              childCompanies = data.Brands.filter(row => row.Company == parent.Company)
-              alternativeCompanies = companyOrBrand['Alt Type'] ? data.Alt.filter(row => row['Alt Type'] == companyOrBrand['Alt Type']) : []
-            });
-            $watch('lang', value => isArabic = lang == 'ar')"
+                window.location.hash = companyOrBrand.Brand ? 'brand=' + companyOrBrand.Brand : 'company=' + companyOrBrand.Company                
+      
+                childCompanies = data.Brands.filter(row => row.Company == parent.Company)
+                alternativeCompanies = companyOrBrand['Alt Type'] ? data.Alt.filter(row => row['Alt Type'] == companyOrBrand['Alt Type']) : []
+              });
+              $watch('lang', value => isArabic = lang == 'ar')
+      
+              const urlFragment = window.location.hash.substring(1);
+              if (urlFragment) {
+                const [type, name] = urlFragment.split('=');
+                if (type === 'brand' || type === 'company') {
+                  const matches = findClosestMatches(
+                    name,
+                    data.Parent.slice(1).concat(data.Brands.slice(1)),
+                    companyOrBrand => companyOrBrand.Brand || companyOrBrand.Company
+                  );
+                  if (matches.length > 0) {
+                    selectedCompanyOrBrand = {
+                      parent: matches[0].Brand ? data.Parent.find(row => row.Company == matches[0].Company) : null,
+                      companyOrBrand: matches[0]
+                    };
+                    $el.show()
+                  }
+                }
+              }"
             >
               <div
                 x-bind:dir="isArabic ? 'rtl': 'ltr'"
@@ -380,7 +400,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                     ></div>
                   </div>
                   <!-- &centerdot;
-                  <span x-text="parent.Category"></span> -->
+                    <span x-text="parent.Category"></span> -->
                 </div>
 
                 <p class="py-4 text-justify" x-text="tierDescription"></p>
