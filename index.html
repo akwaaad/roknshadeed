@@ -340,8 +340,8 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                 parent = _parent || _companyOrBrand
                 companyOrBrand = _companyOrBrand
                 description = isArabic ? parent['Description'] : parent['Description (en)']
-                descriptionIntro = !isParent ? ((isArabic ? 'جاء عن الشركة الأم [' : 'In news about the parent company [') + parent.Company + ']<br><br>') : ''
-                descriptionOutro = '<br><br>' + ' <a class=\'text-blue-500 font-bold\' href=' + parent['Proof'] + '>' + (isArabic ? 'المصدر' : 'Source') + '</a><br><br>'
+                descriptionIntro = !isParent ? '<p>' + ((isArabic ? 'جاء عن الشركة الأم [' : 'In news about the parent company [') + parent.Company + ']</p>') : ''
+                descriptionOutro = '<p><a class=\'text-blue-500 font-bold\' href=' + parent['Proof'] + '>' + (isArabic ? 'المصدر' : 'Source') + '</a></p>'
                 tierDescription = data.Tiers.find(t => t.Tier == parent.Tier)[isArabic ? 'Description' : 'Description (en)']
 
                 window.location.hash = companyOrBrand.Brand ? 'brand=' + companyOrBrand.Brand : 'company=' + companyOrBrand.Company                
@@ -372,7 +372,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
             >
               <div
                 x-bind:dir="isArabic ? 'rtl': 'ltr'"
-                class="modal-box w-96 shadow-[0_35px_60px_5px_rgba(0,0,0,0.3)]"
+                class="modal-box w-96 px-12 py-10 shadow-[0_35px_60px_5px_rgba(0,0,0,0.3)]"
               >
                 <form method="dialog">
                   <button
@@ -382,7 +382,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                     ✕
                   </button>
                 </form>
-                <div class="flex gap-4 items-center justify-center">
+                <div class="flex gap-4 items-center mb-8">
                   <img
                     x-show="companyOrBrand.Logo"
                     x-bind:src="'data:image/png;base64,' + companyOrBrand.Logo"
@@ -403,12 +403,13 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                     <span x-text="parent.Category"></span> -->
                 </div>
 
-                <p class="py-4 text-justify" x-text="tierDescription"></p>
+                <p class="pb-4 tracking-wide" x-text="tierDescription"></p>
 
-                <p
-                  class="py-4 text-justify"
-                  x-html="descriptionIntro + description + descriptionOutro"
-                ></p>
+                <p class="pb-4 tracking-wide" x-html="descriptionIntro"></p>
+
+                <p class="pb-4 tracking-wide" x-html="description"></p>
+
+                <p class="pb-4 tracking-wide" x-html="descriptionOutro"></p>
 
                 <template x-if="isParent && childCompanies.length > 0">
                   <div class="flex flex-col gap-2">
@@ -452,8 +453,16 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                   </div>
                 </template>
 
+                <div class="label mt-8">
+                  <span class="label-text" x-show="!isArabic"
+                    >Share with your friends</span
+                  >
+                  <span class="label-text-alt" x-show="isArabic"
+                    >شارك مع أصدقائك</span
+                  >
+                </div>
                 <div
-                  class="flex justify-center mt-4"
+                  class="flex justify-center"
                   x-data="{
                     isCopied: false,
                   }"
