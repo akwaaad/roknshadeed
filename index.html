@@ -67,7 +67,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
     </template>
     <template x-if="loaded">
       <div
-        class="min-h-screen bg-local bg-center bg-no-repeat"
+        class="min-h-screen bg-local bg-contain md:bg-auto bg-center bg-no-repeat"
         x-bind:style="'background-image: url(\'data:image/png;base64,' + data.Essentials.find(row => row.Keyword == (darkMode ? 'D.BG' : 'L.BG')).Value + '\''"
       >
         <div class="drawer drawer-end">
