@@ -89,6 +89,14 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                 <ul class="menu menu-horizontal items-center">
                   <!-- Navbar menu content here -->
                   <li>
+                    <!-- browse all companies and brands -->
+                    <a
+                      href="#"
+                      x-text="lang == 'ar' ? 'استعراض كل الشركات' : 'Browse all companies'"
+                      x-on:click="companiesAndBrands = data.Parent.slice(1).concat(data.Brands.slice(1))"
+                    ></a>
+                  </li>
+                  <li>
                     <label class="swap swap-rotate">
                       <!-- this hidden checkbox controls the state -->
                       <input
@@ -297,7 +305,6 @@ $watch('lang', value => localStorage.setItem('lang', value));"
 });
 "
             x-data="{
-              companiesAndBrands: [],
               selectedCompanyOrBrand: null,
               tierColor: {
                 '1st': 'badge-error',
@@ -306,7 +313,10 @@ $watch('lang', value => localStorage.setItem('lang', value));"
               },
             }"
           >
-            <table class="table" x-show="searchQuery.length > 0">
+            <table
+              class="table"
+              x-show="searchQuery.length > 0 || companiesAndBrands.length"
+            >
               <thead>
                 <tr>
                   <th

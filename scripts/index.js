@@ -32,6 +32,7 @@ document.addEventListener("alpine:init", () => {
       loaded: false,
       data: {},
       isMobile,
+      companiesAndBrands: [],
 
       async init() {
         let compressed = await fetch("./data.json").then((res) =>
