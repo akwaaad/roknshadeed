@@ -236,6 +236,14 @@ $watch('lang', value => localStorage.setItem('lang', value));"
             <ul class="menu p-4 w-80 min-h-full bg-base-200">
               <!-- Sidebar content here -->
               <li>
+                <!-- browse all companies and brands -->
+                <a
+                  href="#"
+                  x-text="lang == 'ar' ? 'استعراض كل الشركات' : 'Browse all companies'"
+                  x-on:click="companiesAndBrands = data.Parent.slice(1).concat(data.Brands.slice(1))"
+                ></a>
+              </li>
+              <li>
                 <a
                   x-on:click="deferredPrompt.prompt()"
                   x-show="$store.installable"
@@ -370,6 +378,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                 descriptionIntro: null,
                 descriptionOutro: null,
                 tierDescription : null,
+                currentUrl: null,
                 tierLevelAr: {
                   '1st': 'درجة أولى',
                   '2nd': 'درجة ثانية',
@@ -385,7 +394,8 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                 descriptionOutro = '<p><a class=\'text-blue-500 font-bold\' href=' + parent['Proof'] + '>' + (isArabic ? 'المصدر' : 'Source') + '</a></p>'
                 tierDescription = data.Tiers.find(t => t.Tier == parent.Tier)[isArabic ? 'Description' : 'Description (en)']
 
-                window.location.hash = companyOrBrand.Brand ? 'brand=' + companyOrBrand.Brand : 'company=' + companyOrBrand.Company                
+                window.location.hash = companyOrBrand.Brand ? 'brand=' + companyOrBrand.Brand : 'company=' + companyOrBrand.Company
+                currentUrl = window.location.href
       
                 childCompanies = data.Brands.filter(row => row.Company == parent.Company)
                 alternativeCompanies = companyOrBrand['Alt Type'] ? data.Alt.filter(row => row['Alt Type'] == companyOrBrand['Alt Type']) : []
@@ -518,7 +528,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                   }"
                 >
                   <a
-                    x-on:click="navigator.share({ title: companyOrBrand.Brand || parent.Company, text: description, url: window.location.href })"
+                    x-on:click="navigator.share({ title: companyOrBrand.Brand || parent.Company, text: description, url: currentUrl })"
                     class="btn btn-primary"
                     x-show="isMobile"
                     x-text="isArabic ? 'مشاركة' : 'Share'"
@@ -532,7 +542,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                       class="join"
                       x-data="{
                     copy: () => {
-                      navigator.clipboard.writeText(window.location.href);
+                      navigator.clipboard.writeText(currentUrl);
                       isCopied = true;
                       setTimeout(() => isCopied = false, 2000);
                     }
@@ -543,7 +553,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                           <input
                             class="input input-bordered join-item input-sm focus:!outline-none"
                             readonly
-                            x-bind:value="window.location.href"
+                            x-bind:value="currentUrl"
                             x-on:click="() => { copy(), $el.select() }"
                           />
                         </div>
