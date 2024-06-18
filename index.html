@@ -69,7 +69,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
     <template x-if="loaded">
       <div
         class="min-h-screen bg-local bg-contain md:bg-auto bg-center bg-no-repeat"
-        x-bind:style="'background-image: url(\'data:image/png;base64,' + data.Essentials.find(row => row.Keyword == (darkMode ? 'D.BG' : 'L.BG')).Value + '\''"
+        x-bind:style="'background-image: url(\'data:image/png;base64,' + data.Essentials.find(row => row.Keyword == (darkMode ? 'D.BG' : 'L.BG')).Value + '\')'"
       >
         <div class="drawer drawer-end">
           <input id="my-drawer-3" type="checkbox" class="drawer-toggle" />
@@ -92,7 +92,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                     <!-- browse all companies and brands -->
                     <a
                       href="#"
-                      x-text="lang == 'ar' ? 'استعراض كل الشركات' : 'Browse all companies'"
+                      x-text="lang == 'ar' ? 'استعراض جميع الشركات' : 'Browse all companies'"
                       x-on:click="companiesAndBrands = data.Parent.slice(1).concat(data.Brands.slice(1))"
                     ></a>
                   </li>
@@ -239,7 +239,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                 <!-- browse all companies and brands -->
                 <a
                   href="#"
-                  x-text="lang == 'ar' ? 'استعراض كل الشركات' : 'Browse all companies'"
+                  x-text="lang == 'ar' ? 'استعراض جميع الشركات' : 'Browse all companies'"
                   x-on:click="companiesAndBrands = data.Parent.slice(1).concat(data.Brands.slice(1))"
                 ></a>
               </li>
@@ -285,7 +285,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
         >
           <div class="flex justify-center mt-6">
             <label
-              class="input input-bordered flex items-center gap-2 rounded-full transition duration-300 hover:shadow-[0_0_11px_rgba(33,33,33,.2)] !outline-none max-w-[584px] grow"
+              class="input input-bordered flex items-center gap-2 rounded-full transition duration-300 hover:shadow-[0_0_11px_rgba(33,33,33,.2)] dark:hover:shadow-[0_0_11px_rgba(255,255,255,.2)] !outline-none max-w-[584px] grow"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -299,7 +299,12 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                   clip-rule="evenodd"
                 />
               </svg>
-              <input type="text" class="grow" x-model="searchQuery" />
+              <input
+                type="text"
+                class="grow"
+                x-model="searchQuery"
+                x-init="$el.focus()"
+              />
             </label>
           </div>
           <div
@@ -326,7 +331,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
               x-show="searchQuery.length > 0 || companiesAndBrands.length"
             >
               <thead>
-                <tr>
+                <tr class="dark:border-b-[rgba(241,247,237,0.3)]">
                   <th
                     x-text="lang == 'ar' ? 'اسم الشركة' : 'Company / Brand'"
                   ></th>
@@ -348,7 +353,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                     brand: companyOrBrand.Brand,
                     company: companyOrBrand.Company,
                   }"
-                    class="hover:bg-gray-100 hover:cursor-pointer"
+                    class="hover:bg-base-300 hover:cursor-pointer dark:border-b-[rgba(241,247,237,0.3)]"
                     x-on:click="selectedCompanyOrBrand = {parent, companyOrBrand}, detailsModal.show()"
                   >
                     <td
@@ -423,7 +428,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
             >
               <div
                 x-bind:dir="isArabic ? 'rtl': 'ltr'"
-                class="modal-box w-96 px-12 py-10 shadow-[0_35px_60px_5px_rgba(0,0,0,0.3)]"
+                class="modal-box w-96 px-12 py-10 shadow-[0_35px_60px_5px_rgba(0,0,0,0.3)] dark:shadow-[0_35px_60px_5px_rgba(255,255,255,0.3)]"
               >
                 <form method="dialog">
                   <button
