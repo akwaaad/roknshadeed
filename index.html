@@ -68,8 +68,8 @@ $watch('lang', value => localStorage.setItem('lang', value));"
     </template>
     <template x-if="loaded">
       <div
-        class="min-h-screen bg-local bg-contain md:bg-auto bg-center bg-no-repeat"
-        x-bind:style="'background-image: url(\'data:image/png;base64,' + data.Essentials.find(row => row.Keyword == (darkMode ? 'D.BG' : 'L.BG')).Value + '\')'"
+        class="min-h-screen bg-local bg-contain md:bg-auto bg-bottom bg-no-repeat"
+        x-bind:style="'background-image: url(\'data:image/png;base64,' + data.Essentials.find(row => row.Keyword == (darkMode ? 'L.BG' : 'D.BG')).Value + '\')'"
       >
         <div class="drawer drawer-end">
           <input id="my-drawer-3" type="checkbox" class="drawer-toggle" />
@@ -149,7 +149,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                       ></div>
                       <ul
                         tabindex="0"
-                        class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-40"
+                        class="dropdown-content z-[1] menu p-2 shadow bg-base-100 dark:bg-[rgba(241,247,237,0.3)] rounded-box w-40"
                       >
                         <li>
                           <a
