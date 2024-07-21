@@ -476,17 +476,23 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                         x-text="isArabic ? 'الشركات الفرعية' : 'Child Companies'"
                       ></div>
                       <div class="collapse-content p-0">
-                        <div class="flex flex-col gap-2">
-                          <template x-for="childCompany in childCompanies">
-                            <div class="flex gap-4 items-center">
-                              <img
-                                x-bind:src="'data:image/png;base64,' + childCompany.Logo"
-                                x-show="childCompany.Logo"
-                                class="h-8"
-                              />
-                              <h4 x-text="childCompany.Brand"></h4>
-                            </div>
-                          </template>
+                        <div class="overflow-x-auto">
+                          <table class="table table-zebra">
+                            <tbody>
+                              <template x-for="childCompany in childCompanies">
+                                <tr>
+                                  <th>
+                                    <img
+                                      x-bind:src="'data:image/png;base64,' + childCompany.Logo"
+                                      x-show="childCompany.Logo"
+                                      class="h-8"
+                                    />
+                                  </th>
+                                  <td x-text="childCompany.Brand"></td>
+                                </tr>
+                              </template>
+                            </tbody>
+                          </table>
                         </div>
                       </div>
                     </div>
@@ -500,19 +506,25 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                         x-text="isArabic ? 'الشركات البديلة' : 'Alternative Companies'"
                       ></div>
                       <div class="collapse-content p-0">
-                        <div class="flex flex-col gap-2">
-                          <template
-                            x-for="alternativeCompany in alternativeCompanies"
-                          >
-                            <div class="flex gap-4 items-center">
-                              <img
-                                x-bind:src="'data:image/png;base64,' + alternativeCompany.Logo"
-                                x-show="alternativeCompany.Logo"
-                                class="h-8"
-                              />
-                              <h4 x-text="alternativeCompany.Alt"></h4>
-                            </div>
-                          </template>
+                        <div class="overflow-x-auto">
+                          <table class="table table-zebra">
+                            <tbody>
+                              <template
+                                x-for="alternativeCompany in alternativeCompanies"
+                              >
+                                <tr>
+                                  <th>
+                                    <img
+                                      x-bind:src="'data:image/png;base64,' + alternativeCompany.Logo"
+                                      x-show="alternativeCompany.Logo"
+                                      class="h-8"
+                                    />
+                                  </th>
+                                  <td x-text="alternativeCompany.Alt"></td>
+                                </tr>
+                              </template>
+                            </tbody>
+                          </table>
                         </div>
                       </div>
                     </div>
