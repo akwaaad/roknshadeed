@@ -311,12 +311,17 @@ $watch('lang', value => localStorage.setItem('lang', value));"
             <div
               class="overflow-x-auto mt-2"
               x-init="$watch('searchQuery', value => {
-  companiesAndBrands = findClosestMatches(
-    value,
-    data.Parent.slice(1).concat(data.Brands.slice(1)),
-    companyOrBrand => companyOrBrand.Brand || companyOrBrand.Company
-  );
-});
+                const isItAllArabic = s => (!/[^\u0600-\u06FF\u0020-\u0040\u005B-\u0060\u007B-\u007E]/.test(s));
+                if (isItAllArabic(value)) {
+                  value = findClosestMatches(value, data['All Companies'].slice(1), companyOrBrand => companyOrBrand['All Companies (ar)'])[0]['All Companies']
+                }
+
+                companiesAndBrands = findClosestMatches(
+                  value,
+                  data.Parent.slice(1).concat(data.Brands.slice(1)),
+                  companyOrBrand => companyOrBrand.Brand || companyOrBrand.Company
+                );
+              });
 "
               x-data="{
               selectedCompanyOrBrand: null,
