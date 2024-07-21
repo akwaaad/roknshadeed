@@ -456,7 +456,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                         x-text="companyOrBrand.Brand || parent.Company"
                       ></h3>
                       <div
-                        class="badge badge-md text-white font-bold w-24 pt-1"
+                        class="badge badge-md text-white font-bold w-24"
                         x-bind:class="tierColor[parent.Tier]"
                         x-text="isArabic ? tierLevelAr[parent.Tier] : parent.Tier + ' Tier'"
                       ></div>
