@@ -75,7 +75,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
           <input id="my-drawer-3" type="checkbox" class="drawer-toggle" />
           <div class="drawer-content flex flex-col">
             <!-- Navbar -->
-            <div class="w-full navbar">
+            <div class="w-full navbar fixed">
               <div class="flex-1 px-2 mx-2">
                 <img
                   x-data="{ logo: data.Essentials.find(row => row.Keyword == (darkMode ? 'L.L.S' : 'D.L.S')).Value }"
