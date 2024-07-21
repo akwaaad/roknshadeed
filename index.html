@@ -92,7 +92,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                     <!-- browse all companies and brands -->
                     <a
                       href="#"
-                      x-text="lang == 'ar' ? 'استعراض جميع الشركات' : 'Browse all companies'"
+                      x-text="lang == 'ar' ? 'استعراض جميع الشركات' : 'Browse All Companies'"
                       x-on:click="companiesAndBrands = data.Parent.slice(1).concat(data.Brands.slice(1))"
                     ></a>
                   </li>
