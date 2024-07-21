@@ -6,18 +6,21 @@
   font-family: "29LT Kaff";
   src: url("../fonts/29LT Kaff Black.ttf") format("truetype");
   font-weight: bolder;
+  unicode-range: U+600-6FF;
 }
 
 @font-face {
   font-family: "29LT Kaff";
   src: url("../fonts/29LT Kaff Semibold.ttf") format("truetype");
   font-weight: bold;
+  unicode-range: U+600-6FF;
 }
 
 @font-face {
   font-family: "29LT Kaff";
   src: url("../fonts/29LT Kaff.ttf") format("truetype");
   font-weight: normal;
+  unicode-range: U+600-6FF;
 }
 
 /* @font-face {
@@ -26,6 +29,18 @@
   font-weight: lighter;
 } */
 
+@font-face {
+  font-family: "Open Sans";
+  src: url("../fonts/OpenSans-Italic-VariableFont.ttf") format("truetype");
+  font-weight: italic;
+}
+
+@font-face {
+  font-family: "Open Sans";
+  src: url("../fonts/OpenSans-VariableFont.ttf") format("truetype");
+  font-weight: normal;
+}
+
 body {
-  font-family: "29LT Kaff";
+  font-family: "29LT Kaff", "Open Sans", sans-serif;
 }
