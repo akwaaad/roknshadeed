@@ -69,7 +69,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
     <template x-if="loaded">
       <div
         class="flex flex-col h-screen bg-local bg-contain md:bg-auto bg-bottom bg-no-repeat"
-        x-bind:style="'background-image: url(\'data:image/png;base64,' + data.Essentials.find(row => row.Keyword == (darkMode ? 'L.BG' : 'D.BG')).Value + '\')'"
+        x-bind:style="'background-image: url(\'./images/' + data.Essentials.find(row => row.Keyword == (darkMode ? 'L.BG' : 'D.BG')).Value + '\')'"
       >
         <header>
           <div class="drawer drawer-end">
@@ -81,7 +81,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                   <img
                     x-data="{ logo: data.Essentials.find(row => row.Keyword == (darkMode ? 'L.L.S' : 'D.L.S')).Value }"
                     x-init="$watch('darkMode', value => logo = data.Essentials.find(row => row.Keyword == (darkMode ? 'L.L.S' : 'D.L.S')).Value)"
-                    x-bind:src="'data:image/png;base64,' + logo"
+                    x-bind:src="'./images/' + logo"
                     class="h-10"
                     alt="Logo"
                   />
@@ -275,7 +275,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
             <img
               x-data="{ logo: data.Essentials.find(row => row.Keyword == (darkMode ? 'L.L.W' : 'D.L.W')).Value }"
               x-init="$watch('darkMode', value => logo = data.Essentials.find(row => row.Keyword == (darkMode ? 'L.L.W' : 'D.L.W')).Value)"
-              x-bind:src="'data:image/png;base64,' + logo"
+              x-bind:src="'./images/' + logo"
               class="h-20"
               alt="Logo"
             />
@@ -447,7 +447,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                   <div class="flex gap-4 items-center mb-8">
                     <img
                       x-show="companyOrBrand.Logo"
-                      x-bind:src="'data:image/png;base64,' + companyOrBrand.Logo"
+                      x-bind:src="'./images/' + companyOrBrand.Logo"
                       class="h-16"
                     />
                     <div class="flex flex-col">
@@ -488,7 +488,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                                 <tr>
                                   <th>
                                     <img
-                                      x-bind:src="'data:image/png;base64,' + childCompany.Logo"
+                                      x-bind:src="'./images/' + childCompany.Logo"
                                       x-show="childCompany.Logo"
                                       class="h-8"
                                     />
@@ -520,7 +520,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                                 <tr>
                                   <th>
                                     <img
-                                      x-bind:src="'data:image/png;base64,' + alternativeCompany.Logo"
+                                      x-bind:src="'./images/' + alternativeCompany.Logo"
                                       x-show="alternativeCompany.Logo"
                                       class="h-8"
                                     />
@@ -642,7 +642,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
               <template x-for="link in data.Links.slice(1)">
                 <a x-bind:href="link.Link" target="_blank">
                   <img
-                    x-bind:src="'data:image/png;base64,' + (darkMode ? link['DM Logo'] : link.Logo)"
+                    x-bind:src="'./images/' + (darkMode ? link['DM Logo'] : link.Logo)"
                     class="h-6"
                   />
                 </a>
