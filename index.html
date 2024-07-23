@@ -93,7 +93,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                       <a
                         href="#"
                         x-text="lang == 'ar' ? 'استعراض جميع الشركات' : 'Browse All Companies'"
-                        x-on:click="companiesAndBrands = data.Parent.slice(1).concat(data.Brands.slice(1))"
+                        x-on:click="browseByCategoryModal.show()"
                       ></a>
                     </li>
                     <li>
@@ -239,7 +239,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                   <a
                     href="#"
                     x-text="lang == 'ar' ? 'استعراض جميع الشركات' : 'Browse All Companies'"
-                    x-on:click="companiesAndBrands = data.Parent.slice(1).concat(data.Brands.slice(1))"
+                    x-on:click="browseByCategoryModal.show()"
                   ></a>
                 </li>
                 <li>
@@ -270,7 +270,8 @@ $watch('lang', value => localStorage.setItem('lang', value));"
             </div>
           </div>
         </header>
-        <main class="flex-1 overflow-y-auto">
+        <main class="flex-1 overflow-y-auto"
+        style="scrollbar-gutter: stable both-edges;">
           <div class="flex justify-center mt-16 md:mt-32">
             <img
               x-data="{ logo: data.Essentials.find(row => row.Keyword == (darkMode ? 'L.L.W' : 'D.L.W')).Value }"
@@ -624,6 +625,40 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                         </div>
                       </div>
                     </div>
+                  </div>
+                </div>
+                <form
+                  method="dialog"
+                  class="modal-backdrop bg-opacity-80 bg-base-100"
+                >
+                  <button>close</button>
+                </form>
+              </dialog>
+              <dialog
+                id="browseByCategoryModal"
+                class="modal"
+                x-data="{
+                isArabic: lang == 'ar',
+                category: 'all',
+              }"
+                x-init="$watch('category', (category) => {
+                  // todo
+                });"
+              >
+                <div
+                  x-bind:dir="isArabic ? 'rtl': 'ltr'"
+                  class="modal-box w-96 px-12 py-10 shadow-[0_35px_60px_5px_rgba(0,0,0,0.3)] dark:shadow-[0_35px_60px_5px_rgba(255,255,255,0.3)]"
+                >
+                  <form method="dialog">
+                    <button
+                      class="btn btn-sm btn-circle btn-ghost absolute top-2"
+                      x-bind:class="isArabic ? 'left-2' : 'right-2'"
+                    >
+                      ✕
+                    </button>
+                  </form>
+                  <div>
+                    lasdjfl
                   </div>
                 </div>
                 <form

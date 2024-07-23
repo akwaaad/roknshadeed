@@ -1,7 +1,7 @@
 {
   "scripts": {
     "build:watch": "tailwindcss -i ./styles/styles.css -o ./styles/styles.min.css --watch  --minify",
-    "dev": "python3 -m http.server & yarn run build:watch"
+    "dev": "python -m http.server & yarn run build:watch"
   },
   "dependencies": {
     "daisyui": "^4.12.2",
