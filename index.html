@@ -649,7 +649,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
               >
                 <div
                   x-bind:dir="isArabic ? 'rtl': 'ltr'"
-                  class="modal-box w-full px-12 py-10 shadow-[0_35px_60px_5px_rgba(0,0,0,0.3)] dark:shadow-[0_35px_60px_5px_rgba(255,255,255,0.3)]"
+                  class="modal-box min-h-[32rem] px-12 py-10 shadow-[0_35px_60px_5px_rgba(0,0,0,0.3)] dark:shadow-[0_35px_60px_5px_rgba(255,255,255,0.3)]"
                 >
                   <form method="dialog">
                     <button
@@ -698,7 +698,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                         x-show="selectedCategory == 'All' || selectedCategory == company.Category"
                         class="flex flex-col"
                       >
-                        <div class="flex">
+                        <div class="flex items-center gap-4">
                           <img
                             x-show="company.Logo"
                             x-bind:src="company.Logo ? './images/' + company.Logo : ''"
@@ -711,7 +711,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                           <template
                             x-for="childCompany in data.Brands.filter(row => row.Company == company.Company)"
                           >
-                            <div class="flex">
+                            <div class="flex items-center gap-4">
                               <img
                                 x-show="childCompany.Logo"
                                 x-bind:src="childCompany.Logo ? './images/' + childCompany.Logo : ''"
