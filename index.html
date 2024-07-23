@@ -643,7 +643,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                 isArabic: lang == 'ar',
                 selectedCategory: lang == 'ar' ? 'الكل' : 'All',
                 categories: data.Categories.slice(1),
-                companies: data['All Companies'].slice(1),
+                companies: data['Parent'].slice(1),
               }"
                 x-init="$watch('lang', value => isArabic = lang == 'ar')"
               >
@@ -696,20 +696,29 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                     <template x-for="company in companies">
                       <div
                         x-show="selectedCategory == 'All' || selectedCategory == company.Category"
+                        class="flex flex-col"
                       >
-                        <h2
-                          x-text="isArabic ? company['All Companies (ar)'] : company['All Companies']"
-                        ></h2>
-                        <div class="flex flex-wrap gap-4">
+                        <div class="flex">
+                          <img
+                            x-show="company.Logo"
+                            x-bind:src="company.Logo ? './images/' + company.Logo : ''"
+                            class="h-10"
+                          />
+                          <span x-text="company.Company"></span>
+                        </div>
+
+                        <div class="flex flex-col flex-wrap px-16">
                           <template
-                            x-for="childCompany in data.Brands.filter(row => row.Company == company['All Companies'])"
+                            x-for="childCompany in data.Brands.filter(row => row.Company == company.Company)"
                           >
-                            <img
-                              x-show="childCompany.Logo"
-                              x-bind:src="childCompany.Logo ? './images/' + childCompany.Logo : ''"
-                              class="h-10"
-                            />
-                            <span x-text="childCompany.Brand"></span>
+                            <div class="flex">
+                              <img
+                                x-show="childCompany.Logo"
+                                x-bind:src="childCompany.Logo ? './images/' + childCompany.Logo : ''"
+                                class="h-10"
+                              />
+                              <span x-text="childCompany.Brand"></span>
+                            </div>
                           </template>
                         </div>
                       </div>
