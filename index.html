@@ -251,27 +251,29 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                   ></a>
                 </li>
                 <li>
-                    <a
-                      href="#"
-                      x-on:click="lang = 'en'"
-                      x-bind:class="lang == 'en' ? 'font-bold' : ''"
-                      >English</a
-                    >
+                  <a
+                    href="#"
+                    x-on:click="lang = 'en'"
+                    x-bind:class="lang == 'en' ? 'font-bold' : ''"
+                    >English</a
+                  >
                 </li>
                 <li>
-                    <a
-                      href="#"
-                      x-on:click="lang = 'ar'"
-                      x-bind:class="lang == 'ar' ? 'font-bold' : ''"
-                      >العربيّة</a
-                    >
+                  <a
+                    href="#"
+                    x-on:click="lang = 'ar'"
+                    x-bind:class="lang == 'ar' ? 'font-bold' : ''"
+                    >العربيّة</a
+                  >
                 </li>
               </ul>
             </div>
           </div>
         </header>
-        <main class="flex-1 overflow-y-auto"
-        style="scrollbar-gutter: stable both-edges;">
+        <main
+          class="flex-1 overflow-y-auto"
+          style="scrollbar-gutter: stable both-edges"
+        >
           <div class="flex justify-center mt-16 md:mt-32">
             <img
               x-data="{ logo: data.Essentials.find(row => row.Keyword == (darkMode ? 'L.L.W' : 'D.L.W')).Value }"
@@ -448,7 +450,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                   <div class="flex gap-4 items-center mb-8">
                     <img
                       x-show="companyOrBrand.Logo"
-                      x-bind:src="'./images/' + companyOrBrand.Logo"
+                      x-bind:src="companyOrBrand.Logo ? './images/' + companyOrBrand.Logo : ''"
                       class="h-16"
                     />
                     <div class="flex flex-col">
@@ -489,7 +491,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                                 <tr>
                                   <th>
                                     <img
-                                      x-bind:src="'./images/' + childCompany.Logo"
+                                      x-bind:src="childCompany.Logo ? './images/' + childCompany.Logo : ''"
                                       x-show="childCompany.Logo"
                                       class="h-8"
                                     />
@@ -521,7 +523,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                                 <tr>
                                   <th>
                                     <img
-                                      x-bind:src="'./images/' + alternativeCompany.Logo"
+                                      x-bind:src="alternativeCompany.Logo ? './images/' + alternativeCompany.Logo : ''"
                                       x-show="alternativeCompany.Logo"
                                       class="h-8"
                                     />
@@ -639,15 +641,15 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                 class="modal"
                 x-data="{
                 isArabic: lang == 'ar',
-                category: 'all',
+                selectedCategory: lang == 'ar' ? 'الكل' : 'All',
+                categories: data.Categories.slice(1),
+                companies: data['All Companies'].slice(1),
               }"
-                x-init="$watch('category', (category) => {
-                  // todo
-                });"
+                x-init="$watch('lang', value => isArabic = lang == 'ar')"
               >
                 <div
                   x-bind:dir="isArabic ? 'rtl': 'ltr'"
-                  class="modal-box w-96 px-12 py-10 shadow-[0_35px_60px_5px_rgba(0,0,0,0.3)] dark:shadow-[0_35px_60px_5px_rgba(255,255,255,0.3)]"
+                  class="modal-box w-full px-12 py-10 shadow-[0_35px_60px_5px_rgba(0,0,0,0.3)] dark:shadow-[0_35px_60px_5px_rgba(255,255,255,0.3)]"
                 >
                   <form method="dialog">
                     <button
@@ -658,7 +660,60 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                     </button>
                   </form>
                   <div>
-                    lasdjfl
+                    <span x-text="isArabic ? 'الفئة' : 'Category'"></span>
+                    <div class="dropdown">
+                      <div
+                        tabindex="0"
+                        role="button"
+                        class="btn m-1"
+                        x-text="selectedCategory"
+                      ></div>
+                      <ul
+                        tabindex="0"
+                        class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"
+                      >
+                        <li>
+                          <a
+                            href="#"
+                            x-on:click="selectedCategory = 'All'"
+                            x-text="isArabic ? 'الكل' : 'All'"
+                          ></a>
+                        </li>
+
+                        <template x-for="category in categories">
+                          <li>
+                            <a
+                              href="#"
+                              x-on:click="selectedCategory = category.Category"
+                              x-text="isArabic ? category['Category(ar)'] : category.Category"
+                            ></a>
+                          </li>
+                        </template>
+                      </ul>
+                    </div>
+                  </div>
+                  <div>
+                    <template x-for="company in companies">
+                      <div
+                        x-show="selectedCategory == 'All' || selectedCategory == company.Category"
+                      >
+                        <h2
+                          x-text="isArabic ? company['All Companies (ar)'] : company['All Companies']"
+                        ></h2>
+                        <div class="flex flex-wrap gap-4">
+                          <template
+                            x-for="childCompany in data.Brands.filter(row => row.Company == company['All Companies'])"
+                          >
+                            <img
+                              x-show="childCompany.Logo"
+                              x-bind:src="childCompany.Logo ? './images/' + childCompany.Logo : ''"
+                              class="h-10"
+                            />
+                            <span x-text="childCompany.Brand"></span>
+                          </template>
+                        </div>
+                      </div>
+                    </template>
                   </div>
                 </div>
                 <form
