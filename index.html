@@ -328,17 +328,15 @@ $watch('lang', value => localStorage.setItem('lang', value));"
 "
               x-data="{
               selectedCompanyOrBrand: null,
-              tierColor: {
-                '1st': 'badge-error',
-                '2nd': 'bg-orange-400 border-orange-400',
-                '3rd': 'bg-yellow-300 border-yellow-300'
-              },
             }"
             >
-              <div x-show="(companiesAndBrands[0].Brand || companiesAndBrands[0].Company).toLowerCase() != searchQuery.toLowerCase() && searchQuery != ''"
-                  class="flex justify-center items-center gap-2 mt-4"
-                  x-text="lang == 'ar' ? 'لم يتم العثور على نتائج، تظهر نتائج مماثلة...' : 'No results found, showing similar results...'"
-                ></div>
+              <div
+                x-show="companiesAndBrands.length > 0 
+                && (companiesAndBrands[0].Brand || companiesAndBrands[0].Company).toLowerCase() != searchQuery.toLowerCase()
+                && searchQuery != ''"
+                class="flex justify-center items-center gap-2 mt-4"
+                x-text="lang == 'ar' ? 'لم يتم العثور على نتائج، تظهر نتائج مماثلة...' : 'No results found, showing similar results...'"
+              ></div>
               <table
                 class="table"
                 x-show="searchQuery.length > 0 || companiesAndBrands.length"
@@ -365,6 +363,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                     parent: companyOrBrand.Brand ? data.Parent.find(row => row.Company == companyOrBrand.Company) : null,
                     brand: companyOrBrand.Brand,
                     company: companyOrBrand.Company,
+                    tier: data.Tiers.find(t => t.Tier == (companyOrBrand.Tier || data.Parent.find(row => row.Company == companyOrBrand.Company).Tier))
                   }"
                       class="hover:bg-base-300 hover:cursor-pointer dark:border-b-[rgba(241,247,237,0.3)]"
                       x-on:click="selectedCompanyOrBrand = {parent, companyOrBrand}, detailsModal.show()"
@@ -372,10 +371,15 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                       <td
                         x-html="(brand ? '<b>' + brand + '</b> by ' + company : '<b>' + company + '</b>')"
                       ></td>
-                      <td class="flex justify-end items-center">
+                      <td
+                        class="flex justify-end items-center"
+                        x-data="{
+                          tierClasses: 'border-color:' + tier.Background + '; background-color: ' + tier.Background + '; color: ' + tier.TextColor,
+                        }"
+                      >
                         <div
                           class="badge badge-md"
-                          x-bind:class="tierColor[companyOrBrand.Tier || parent.Tier]"
+                          x-bind:style="tierClasses"
                         ></div>
                       </td>
                     </tr>
@@ -445,16 +449,14 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                       '2nd': 'درجة ثانية',
                       '3rd': 'درجة ثالثة',
                     },
-                    tierColor: {
-                      '1st': 'badge-error',
-                      '2nd': 'bg-orange-400 border-orange-400',
-                      '3rd': 'bg-yellow-300 border-yellow-300'
-                    },
                   }"
                   >
                     <template x-for="company in companies">
                       <div
                         x-show="selectedCategory == 'All' || selectedCategory == company.Category"
+                        x-data="{
+                          tier: data.Tiers.find(t => t.Tier == company.Tier)
+                        }"
                         class="flex flex-col mb-4"
                       >
                         <div class="flex justify-between items-start w-full">
@@ -467,11 +469,16 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                               x-bind:src="company.Logo ? './images/' + company.Logo : ''"
                               class="h-10"
                             />
-                            <div class="flex flex-col">
+                            <div
+                              class="flex flex-col"
+                              x-data="{
+                                tierClasses: 'border-color:' + tier.Background + '; background-color: ' + tier.Background + '; color: ' + tier.TextColor,
+                              }"
+                            >
                               <span x-text="company.Company"></span>
                               <div
                                 class="badge badge-md text-white font-bold w-24"
-                                x-bind:class="tierColor[company.Tier]"
+                                x-bind:style="tierClasses"
                                 x-text="isArabic ? tierLevelAr[company.Tier] : company.Tier + ' Tier'"
                               ></div>
                             </div>
@@ -518,9 +525,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                 </form>
               </dialog>
 
-              <dialog
-                id="detailsModal"
-                class="modal"
+              <div
                 x-data="{
                 isArabic: lang == 'ar',
                 isParent: null,
@@ -533,249 +538,262 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                 descriptionOutro: null,
                 tierDescription : null,
                 currentUrl: null,
+                tier: null,
                 tierLevelAr: {
                   '1st': 'درجة أولى',
                   '2nd': 'درجة ثانية',
                   '3rd': 'درجة ثالثة',
                 }
               }"
-                x-init="$watch('selectedCompanyOrBrand', ({ parent: _parent, companyOrBrand: _companyOrBrand }) => {
-                isParent = !_parent
-                parent = _parent || _companyOrBrand
-                companyOrBrand = _companyOrBrand
-                description = isArabic ? parent['Description'] : parent['Description (en)']
-                descriptionIntro = !isParent ? '<p>' + ((isArabic ? 'جاء عن الشركة الأم [' : 'In news about the parent company [') + parent.Company + ']</p>') : ''
-                descriptionOutro = '<p><a class=\'text-blue-500 font-bold\' href=' + parent['Proof'] + '>' + (isArabic ? 'المصدر' : 'Source') + '</a></p>'
-                tierDescription = data.Tiers.find(t => t.Tier == parent.Tier)[isArabic ? 'Description' : 'Description (en)']
-
-                window.location.hash = companyOrBrand.Brand ? 'brand=' + companyOrBrand.Brand : 'company=' + companyOrBrand.Company
-                currentUrl = window.location.href
-      
-                childCompanies = data.Brands.filter(row => row.Company == parent.Company)
-                alternativeCompanies = companyOrBrand['Alt Type'] ? data.Alt.filter(row => row['Alt Type'] == companyOrBrand['Alt Type']) : []
-              });
-              $watch('lang', value => isArabic = lang == 'ar')
-      
-              const urlFragment = window.location.hash.substring(1);
-              if (urlFragment) {
-                const [type, name] = urlFragment.split('=');
-                if (type === 'brand' || type === 'company') {
-                  const matches = findClosestMatches(
-                    name,
-                    data.Parent.slice(1).concat(data.Brands.slice(1)),
-                    companyOrBrand => companyOrBrand.Brand || companyOrBrand.Company
-                  );
-                  if (matches.length > 0) {
-                    selectedCompanyOrBrand = {
-                      parent: matches[0].Brand ? data.Parent.find(row => row.Company == matches[0].Company) : null,
-                      companyOrBrand: matches[0]
-                    };
-                    $el.show()
-                  }
-                }
-              }"
               >
-                <div
-                  x-bind:dir="isArabic ? 'rtl': 'ltr'"
-                  class="modal-box w-96 px-12 py-10 shadow-[0_35px_60px_5px_rgba(0,0,0,0.3)] dark:shadow-[0_35px_60px_5px_rgba(255,255,255,0.3)]"
+                <dialog
+                  id="detailsModal"
+                  class="modal"
+                  x-init="
+                  const setSelectedCompany = ({ parent: _parent, companyOrBrand: _companyOrBrand }) => {
+                    console.log({_parent, _companyOrBrand})
+                    isParent = Boolean(_parent)
+                    parent = _parent || _companyOrBrand
+                    companyOrBrand = _companyOrBrand
+                    description = isArabic ? parent['Description'] : parent['Description (en)']
+                    descriptionIntro = !isParent ? '<p>' + ((isArabic ? 'جاء عن الشركة الأم [' : 'In news about the parent company [') + parent.Company + ']</p>') : ''
+                    descriptionOutro = '<p><a class=\'text-blue-500 font-bold\' href=' + parent['Proof'] + '>' + (isArabic ? 'المصدر' : 'Source') + '</a></p>'
+                    tier = data.Tiers.find(t => t.Tier == parent.Tier)
+                    tierDescription = tier[isArabic ? 'Description' : 'Description (en)']
+
+                    window.location.hash = companyOrBrand.Brand ? 'brand=' + companyOrBrand.Brand : 'company=' + companyOrBrand.Company
+                    currentUrl = window.location.href
+          
+                    childCompanies = data.Brands.filter(row => row.Company == parent.Company)
+                    alternativeCompanies = companyOrBrand['Alt Type'] ? data.Alt.filter(row => row['Alt Type'] == companyOrBrand['Alt Type']) : []
+                  }
+
+                  $watch('selectedCompanyOrBrand', setSelectedCompany);
+                  $watch('lang', value => isArabic = lang == 'ar')
+      
+                  const urlFragment = window.location.hash.substring(1);
+                  if (urlFragment) {
+                    const [type, name] = urlFragment.split('=');
+                    if (type === 'brand' || type === 'company') {
+                      const matches = findClosestMatches(
+                        name,
+                        data.Parent.slice(1).concat(data.Brands.slice(1)),
+                        companyOrBrand => companyOrBrand.Brand || companyOrBrand.Company
+                      );
+                      if (matches.length > 0) {
+                        setSelectedCompany({
+                          parent: matches[0].Brand ? data.Parent.find(row => row.Company == matches[0].Company) : null,
+                          companyOrBrand: matches[0]
+                        });
+                        $el.show()
+                      }
+                    }
+                  }"
                 >
-                  <form method="dialog">
-                    <button
-                      class="btn btn-sm btn-circle btn-ghost absolute top-2"
-                      x-bind:class="isArabic ? 'left-2' : 'right-2'"
-                    >
-                      ✕
-                    </button>
-                  </form>
-                  <div class="flex gap-4 items-center mb-8">
-                    <img
-                      x-show="companyOrBrand.Logo"
-                      x-bind:src="companyOrBrand.Logo ? './images/' + companyOrBrand.Logo : ''"
-                      class="h-16"
-                    />
-                    <div class="flex flex-col">
-                      <h3
-                        class="font-extrabold text-red-500 text-xl"
-                        x-text="companyOrBrand.Brand || parent.Company"
-                      ></h3>
-                      <div
-                        class="badge badge-md text-white font-bold w-24"
-                        x-bind:class="tierColor[parent.Tier]"
-                        x-text="isArabic ? tierLevelAr[parent.Tier] : parent.Tier + ' Tier'"
-                      ></div>
-                    </div>
-                    <!-- &centerdot;
-                    <span x-text="parent.Category"></span> -->
-                  </div>
-
-                  <p class="mb-3 tracking-wide" x-text="tierDescription"></p>
-
-                  <p class="mb-3 tracking-wide" x-html="descriptionIntro"></p>
-
-                  <p class="mb-3 tracking-wide" x-html="description"></p>
-
-                  <p class="mb-3 tracking-wide" x-html="descriptionOutro"></p>
-
-                  <template x-if="isParent && childCompanies.length > 0">
-                    <div class="collapse rounded-none collapse-arrow">
-                      <input type="checkbox" class="min-h-0 h-7" />
-                      <div
-                        class="collapse-title text-lg min-h-0 h-7 leading-5 font-medium p-0 after:!top-2.5"
-                        x-text="isArabic ? 'الشركات الفرعية' : 'Child Companies'"
-                      ></div>
-                      <div class="collapse-content p-0">
-                        <div class="overflow-x-auto">
-                          <table class="table table-zebra">
-                            <tbody>
-                              <template x-for="childCompany in childCompanies">
-                                <tr>
-                                  <th>
-                                    <img
-                                      x-bind:src="childCompany.Logo ? './images/' + childCompany.Logo : ''"
-                                      x-show="childCompany.Logo"
-                                      class="h-8"
-                                    />
-                                  </th>
-                                  <td x-text="childCompany.Brand"></td>
-                                </tr>
-                              </template>
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
-                    </div>
-                  </template>
-
-                  <template x-if="alternativeCompanies.length > 0">
-                    <div class="collapse rounded-none collapse-arrow">
-                      <input type="checkbox" class="min-h-0 h-7" />
-                      <div
-                        class="collapse-title text-lg min-h-0 h-7 leading-5 font-medium p-0 after:!top-2.5"
-                        x-text="isArabic ? 'الشركات البديلة' : 'Alternative Companies'"
-                      ></div>
-                      <div class="collapse-content p-0">
-                        <div class="overflow-x-auto">
-                          <table class="table table-zebra">
-                            <tbody>
-                              <template
-                                x-for="alternativeCompany in alternativeCompanies"
-                              >
-                                <tr>
-                                  <th>
-                                    <img
-                                      x-bind:src="alternativeCompany.Logo ? './images/' + alternativeCompany.Logo : ''"
-                                      x-show="alternativeCompany.Logo"
-                                      class="h-8"
-                                    />
-                                  </th>
-                                  <td x-text="alternativeCompany.Alt"></td>
-                                </tr>
-                              </template>
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
-                    </div>
-                  </template>
-
-                  <div class="label mt-8" x-show="!isMobile">
-                    <span class="label-text" x-show="!isArabic"
-                      >Share with your friends</span
-                    >
-                    <span class="label-text-alt" x-show="isArabic"
-                      >شارك مع أصدقائك</span
-                    >
-                  </div>
                   <div
-                    class="flex justify-center"
-                    x-bind:class="isMobile ? 'mt-8' : ''"
-                    x-data="{
+                    x-bind:dir="isArabic ? 'rtl': 'ltr'"
+                    class="modal-box w-96 px-12 py-10 shadow-[0_35px_60px_5px_rgba(0,0,0,0.3)] dark:shadow-[0_35px_60px_5px_rgba(255,255,255,0.3)]"
+                  >
+                    <form method="dialog">
+                      <button
+                        class="btn btn-sm btn-circle btn-ghost absolute top-2"
+                        x-bind:class="isArabic ? 'left-2' : 'right-2'"
+                      >
+                        ✕
+                      </button>
+                    </form>
+                    <div class="flex gap-4 items-center mb-8">
+                      <img
+                        x-show="companyOrBrand && companyOrBrand.Logo"
+                        x-bind:src="companyOrBrand && (companyOrBrand.Logo ? './images/' + companyOrBrand.Logo : '')"
+                        class="h-16"
+                      />
+                      <div class="flex flex-col">
+                        <h3
+                          class="font-extrabold text-red-500 text-xl"
+                          x-text="companyOrBrand && (companyOrBrand.Brand || parent.Company)"
+                        ></h3>
+                        <div
+                          class="badge badge-md text-white font-bold w-24"
+                          x-bind:style="'border-color:' + tier.Background + '; background-color: ' + tier.Background + '; color: ' + tier.TextColor"
+                          x-text="parent && (isArabic ? tierLevelAr[parent.Tier] : parent.Tier + ' Tier')"
+                        ></div>
+                      </div>
+                      <!-- &centerdot;
+                    <span x-text="parent.Category"></span> -->
+                    </div>
+
+                    <p class="mb-3 tracking-wide" x-text="tierDescription"></p>
+
+                    <p class="mb-3 tracking-wide" x-html="descriptionIntro"></p>
+
+                    <p class="mb-3 tracking-wide" x-html="description"></p>
+
+                    <p class="mb-3 tracking-wide" x-html="descriptionOutro"></p>
+
+                    <template x-if="isParent && childCompanies.length > 0">
+                      <div class="collapse rounded-none collapse-arrow">
+                        <input type="checkbox" class="min-h-0 h-7" />
+                        <div
+                          class="collapse-title text-lg min-h-0 h-7 leading-5 font-medium p-0 after:!top-2.5"
+                          x-text="isArabic ? 'الشركات الفرعية' : 'Child Companies'"
+                        ></div>
+                        <div class="collapse-content p-0">
+                          <div class="overflow-x-auto">
+                            <table class="table table-zebra">
+                              <tbody>
+                                <template
+                                  x-for="childCompany in childCompanies"
+                                >
+                                  <tr>
+                                    <th>
+                                      <img
+                                        x-bind:src="childCompany.Logo ? './images/' + childCompany.Logo : ''"
+                                        x-show="childCompany.Logo"
+                                        class="h-8"
+                                      />
+                                    </th>
+                                    <td x-text="childCompany.Brand"></td>
+                                  </tr>
+                                </template>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </template>
+
+                    <template x-if="alternativeCompanies.length > 0">
+                      <div class="collapse rounded-none collapse-arrow">
+                        <input type="checkbox" class="min-h-0 h-7" />
+                        <div
+                          class="collapse-title text-lg min-h-0 h-7 leading-5 font-medium p-0 after:!top-2.5"
+                          x-text="isArabic ? 'الشركات البديلة' : 'Alternative Companies'"
+                        ></div>
+                        <div class="collapse-content p-0">
+                          <div class="overflow-x-auto">
+                            <table class="table table-zebra">
+                              <tbody>
+                                <template
+                                  x-for="alternativeCompany in alternativeCompanies"
+                                >
+                                  <tr>
+                                    <th>
+                                      <img
+                                        x-bind:src="alternativeCompany.Logo ? './images/' + alternativeCompany.Logo : ''"
+                                        x-show="alternativeCompany.Logo"
+                                        class="h-8"
+                                      />
+                                    </th>
+                                    <td x-text="alternativeCompany.Alt"></td>
+                                  </tr>
+                                </template>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </template>
+
+                    <div class="label mt-8" x-show="!isMobile">
+                      <span class="label-text" x-show="!isArabic"
+                        >Share with your friends</span
+                      >
+                      <span class="label-text-alt" x-show="isArabic"
+                        >شارك مع أصدقائك</span
+                      >
+                    </div>
+                    <div
+                      class="flex justify-center"
+                      x-bind:class="isMobile ? 'mt-8' : ''"
+                      x-data="{
                     isCopied: false,
                   }"
-                  >
-                    <a
-                      x-on:click="navigator.share({ title: companyOrBrand.Brand || parent.Company, text: description, url: currentUrl })"
-                      class="btn btn-primary"
-                      x-show="isMobile"
-                      x-text="isArabic ? 'مشاركة' : 'Share'"
-                    ></a>
-                    <div
-                      x-show="!isMobile"
-                      class="tooltip"
-                      x-bind:data-tip="isCopied ? (isArabic ? 'تم النسخ!' : 'Copied!') : (isArabic ? 'انسخ الرابط' : 'Copy link')"
                     >
+                      <a
+                        x-on:click="navigator.share({ title: companyOrBrand.Brand || parent.Company, text: description, url: currentUrl })"
+                        class="btn btn-primary"
+                        x-show="isMobile"
+                        x-text="isArabic ? 'مشاركة' : 'Share'"
+                      ></a>
                       <div
-                        class="join"
-                        x-data="{
+                        x-show="!isMobile"
+                        class="tooltip"
+                        x-bind:data-tip="isCopied ? (isArabic ? 'تم النسخ!' : 'Copied!') : (isArabic ? 'انسخ الرابط' : 'Copy link')"
+                      >
+                        <div
+                          class="join"
+                          x-data="{
                     copy: () => {
                       navigator.clipboard.writeText(currentUrl);
                       isCopied = true;
                       setTimeout(() => isCopied = false, 2000);
                     }
                   }"
-                      >
-                        <div>
+                        >
                           <div>
-                            <input
-                              class="input input-bordered join-item input-sm focus:!outline-none"
-                              readonly
-                              x-bind:value="currentUrl"
-                              x-on:click="() => { copy(), $el.select() }"
-                            />
+                            <div>
+                              <input
+                                class="input input-bordered join-item input-sm focus:!outline-none"
+                                readonly
+                                x-bind:value="currentUrl"
+                                x-on:click="() => { copy(), $el.select() }"
+                              />
+                            </div>
                           </div>
-                        </div>
-                        <div class="indicator">
-                          <button
-                            class="btn join-item btn-sm"
-                            x-on:click="copy"
-                          >
-                            <svg
-                              x-show="isCopied"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                              stroke-width="2"
-                              fill="none"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              class="w-6 h-6"
+                          <div class="indicator">
+                            <button
+                              class="btn join-item btn-sm"
+                              x-on:click="copy"
                             >
-                              <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                            <svg
-                              x-show="!isCopied"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                              stroke-width="2"
-                              fill="none"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              class="w-5 h-5"
-                            >
-                              <path
-                                d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"
-                              ></path>
-                              <rect
-                                x="8"
-                                y="2"
-                                width="8"
-                                height="4"
-                                rx="1"
-                                ry="1"
-                              ></rect>
-                            </svg>
-                          </button>
+                              <svg
+                                x-show="isCopied"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                fill="none"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="w-6 h-6"
+                              >
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                              </svg>
+                              <svg
+                                x-show="!isCopied"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                fill="none"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="w-5 h-5"
+                              >
+                                <path
+                                  d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"
+                                ></path>
+                                <rect
+                                  x="8"
+                                  y="2"
+                                  width="8"
+                                  height="4"
+                                  rx="1"
+                                  ry="1"
+                                ></rect>
+                              </svg>
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                <form
-                  method="dialog"
-                  class="modal-backdrop bg-opacity-80 bg-base-100"
-                >
-                  <button>close</button>
-                </form>
-              </dialog>
+                  <form
+                    method="dialog"
+                    class="modal-backdrop bg-opacity-80 bg-base-100"
+                  >
+                    <button>close</button>
+                  </form>
+                </dialog>
+              </div>
             </div>
           </div>
         </main>
