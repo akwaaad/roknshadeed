@@ -335,6 +335,11 @@ $watch('lang', value => localStorage.setItem('lang', value));"
               },
             }"
             >
+              <div x-show="(companiesAndBrands[0].Brand || companiesAndBrands[0].Company).toLowerCase() == searchQuery.toLowerCase()">
+                <div
+                  class="flex justify-center items-center gap-2 mt-4"
+                  x-text="lang == 'ar' ? 'لم يتم العثور على نتائج' : 'No results found'"
+                ></div>
               <table
                 class="table"
                 x-show="searchQuery.length > 0 || companiesAndBrands.length"
@@ -387,6 +392,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                 categories: [{'Category(ar)': 'الكل', 'Category': 'All'}, ...data.Categories.slice(1)],
                 companies: data.Parent.slice(1),
                 childCompanies: data.Brands.slice(1).reduce((acc, brand) => {
+                  if (!brand.Logo) return acc;
                   if (!acc[brand.Company]) {
                     acc[brand.Company] = [];
                   }

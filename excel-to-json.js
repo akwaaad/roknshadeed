@@ -45,8 +45,7 @@ async function main() {
           return acc;
         }, {});
       })
-      .filter((row) => Object.keys(row).length > 0)
-      .filter((row) => row.Show !== false);
+      .filter((row) => Object.keys(row).length > 0);
 
     outputJSON[sheetName] = sheetData;
   }
