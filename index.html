@@ -724,18 +724,19 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                           </div>
                         </div>
 
-                        <div x-show="childCompanies[company.Company]" class="flex flex-col flex-wrap px-16">
+                        <div x-show="childCompanies[company.Company]" class="flex flex-col flex-wrap"
+                        x-bind:class="isArabic ? 'mr-16' : 'ml-16'">
                           <table class="table table-zebra">
                             <tbody>
                               <template x-for="childCompany in childCompanies[company.Company]">
                                 <tr>
-                                  <th>
+                                  <td class="w-[4.5rem]">
                                     <img
                                       x-bind:src="childCompany.Logo ? './images/' + childCompany.Logo : ''"
                                       x-show="childCompany.Logo"
-                                      class="h-8"
+                                      class="h-10"
                                     />
-                                  </th>
+                                  </td>
                                   <td x-text="childCompany.Brand"></td>
                                 </tr>
                               </template>
