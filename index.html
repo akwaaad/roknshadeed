@@ -452,7 +452,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                         x-show="selectedCategory == 'All' || selectedCategory == company.Category"
                         class="flex flex-col mb-4"
                       >
-                        <div class="flex items-center justify-between w-full">
+                        <div class="flex justify-between items-start w-full">
                           <div
                             class="flex items-center gap-4 mb-3 cursor-pointer hover:opacity-70"
                             x-on:click="selectedCompanyOrBrand = {parent: null, companyOrBrand: company}, detailsModal.show()"
