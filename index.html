@@ -337,7 +337,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
             >
               <div x-show="(companiesAndBrands[0].Brand || companiesAndBrands[0].Company).toLowerCase() != searchQuery.toLowerCase() && searchQuery != ''"
                   class="flex justify-center items-center gap-2 mt-4"
-                  x-text="lang == 'ar' ? 'لم يتم العثور على نتائج' : 'No results found'"
+                  x-text="lang == 'ar' ? 'لم يتم العثور على نتائج، تظهر نتائج مماثلة...' : 'No results found, showing similar results...'"
                 ></div>
               <table
                 class="table"
