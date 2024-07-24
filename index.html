@@ -60,6 +60,21 @@ $watch('lang', value => localStorage.setItem('lang', value));"
     <script src="scripts/index.js"></script>
 
     <link href="styles/styles.min.css" rel="stylesheet" type="text/css" />
+
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-2S373RPYQH"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-2S373RPYQH");
+    </script>
   </head>
 
   <body class="container mx-auto min-h-screen" x-data="app">
