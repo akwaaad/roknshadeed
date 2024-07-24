@@ -433,7 +433,8 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                       </ul>
                     </div>
                   </div>
-                  <div x-data="{
+                  <div
+                    x-data="{
                     tierLevelAr: {
                       '1st': 'درجة أولى',
                       '2nd': 'درجة ثانية',
@@ -444,14 +445,18 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                       '2nd': 'bg-orange-400 border-orange-400',
                       '3rd': 'bg-yellow-300 border-yellow-300'
                     },
-                  }">
+                  }"
+                  >
                     <template x-for="company in companies">
                       <div
                         x-show="selectedCategory == 'All' || selectedCategory == company.Category"
                         class="flex flex-col mb-4"
                       >
                         <div class="flex items-center justify-between w-full">
-                          <div class="flex items-center gap-4 mb-3 cursor-pointer hover:opacity-70" x-on:click="selectedCompanyOrBrand = {parent: null, companyOrBrand: company}, detailsModal.show()">
+                          <div
+                            class="flex items-center gap-4 mb-3 cursor-pointer hover:opacity-70"
+                            x-on:click="selectedCompanyOrBrand = {parent: null, companyOrBrand: company}, detailsModal.show()"
+                          >
                             <img
                               x-show="company.Logo"
                               x-bind:src="company.Logo ? './images/' + company.Logo : ''"
@@ -466,15 +471,22 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                               ></div>
                             </div>
                           </div>
-                          <button class="btn btn-xs" x-text="isArabic ? 'المزيد' : 'More Info'"
-                           x-on:click="selectedCompanyOrBrand = {parent: null, companyOrBrand: company}, detailsModal.show()"></button>
+                          <button
+                            class="btn btn-xs"
+                            x-text="isArabic ? 'المزيد' : 'More Info'"
+                            x-on:click="selectedCompanyOrBrand = {parent: null, companyOrBrand: company}, detailsModal.show()"
+                          ></button>
                         </div>
 
-                        <div x-show="childCompanies[company.Company]" class="flex flex-col flex-wrap"
-                        x-bind:class="isArabic ? 'mr-16' : 'ml-16'">
+                        <div
+                          x-show="childCompanies[company.Company]"
+                          class="flex flex-col flex-wrap"
+                        >
                           <table class="table table-zebra">
                             <tbody>
-                              <template x-for="childCompany in childCompanies[company.Company]">
+                              <template
+                                x-for="childCompany in childCompanies[company.Company]"
+                              >
                                 <tr>
                                   <td class="w-[4.5rem]">
                                     <img
@@ -500,7 +512,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                   <button>close</button>
                 </form>
               </dialog>
-              
+
               <dialog
                 id="detailsModal"
                 class="modal"
