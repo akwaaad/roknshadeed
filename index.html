@@ -641,9 +641,16 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                 class="modal"
                 x-data="{
                 isArabic: lang == 'ar',
-                selectedCategory: lang == 'ar' ? 'الكل' : 'All',
-                categories: data.Categories.slice(1),
-                companies: data['Parent'].slice(1),
+                selectedCategory: 'All',
+                categories: [{'Category(ar)': 'الكل', 'Category': 'All'}, ...data.Categories.slice(1)],
+                companies: data.Parent.slice(1),
+                childCompanies: data.Brands.slice(1).reduce((acc, brand) => {
+                  if (!acc[brand.Company]) {
+                    acc[brand.Company] = [];
+                  }
+                  acc[brand.Company].push(brand);
+                  return acc;
+                }, {})
               }"
                 x-init="$watch('lang', value => isArabic = lang == 'ar')"
               >
@@ -659,27 +666,19 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                       ✕
                     </button>
                   </form>
-                  <div>
+                  <div class="mb-5">
                     <span x-text="isArabic ? 'الفئة' : 'Category'"></span>
                     <div class="dropdown">
                       <div
                         tabindex="0"
                         role="button"
                         class="btn m-1"
-                        x-text="selectedCategory"
+                        x-text="isArabic ? categories.find(c => selectedCategory == c.Category)['Category(ar)'] : selectedCategory"
                       ></div>
                       <ul
                         tabindex="0"
                         class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"
                       >
-                        <li>
-                          <a
-                            href="#"
-                            x-on:click="selectedCategory = 'All'"
-                            x-text="isArabic ? 'الكل' : 'All'"
-                          ></a>
-                        </li>
-
                         <template x-for="category in categories">
                           <li>
                             <a
@@ -692,34 +691,56 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                       </ul>
                     </div>
                   </div>
-                  <div>
+                  <div x-data="{
+                    tierLevelAr: {
+                      '1st': 'درجة أولى',
+                      '2nd': 'درجة ثانية',
+                      '3rd': 'درجة ثالثة',
+                    },
+                    tierColor: {
+                      '1st': 'badge-error',
+                      '2nd': 'bg-orange-400 border-orange-400',
+                      '3rd': 'bg-yellow-300 border-yellow-300'
+                    },
+                  }">
                     <template x-for="company in companies">
                       <div
                         x-show="selectedCategory == 'All' || selectedCategory == company.Category"
-                        class="flex flex-col"
+                        class="flex flex-col mb-4"
                       >
-                        <div class="flex items-center gap-4">
+                        <div class="flex items-center gap-4 mb-3">
                           <img
                             x-show="company.Logo"
                             x-bind:src="company.Logo ? './images/' + company.Logo : ''"
                             class="h-10"
                           />
-                          <span x-text="company.Company"></span>
+                          <div class="flex flex-col">
+                            <span x-text="company.Company"></span>
+                            <div
+                        class="badge badge-md text-white font-bold w-24"
+                        x-bind:class="tierColor[company.Tier]"
+                        x-text="isArabic ? tierLevelAr[company.Tier] : company.Tier + ' Tier'"
+                      ></div>
+                          </div>
                         </div>
 
-                        <div class="flex flex-col flex-wrap px-16">
-                          <template
-                            x-for="childCompany in data.Brands.filter(row => row.Company == company.Company)"
-                          >
-                            <div class="flex items-center gap-4">
-                              <img
-                                x-show="childCompany.Logo"
-                                x-bind:src="childCompany.Logo ? './images/' + childCompany.Logo : ''"
-                                class="h-10"
-                              />
-                              <span x-text="childCompany.Brand"></span>
-                            </div>
-                          </template>
+                        <div x-show="childCompanies[company.Company]" class="flex flex-col flex-wrap px-16">
+                          <table class="table table-zebra">
+                            <tbody>
+                              <template x-for="childCompany in childCompanies[company.Company]">
+                                <tr>
+                                  <th>
+                                    <img
+                                      x-bind:src="childCompany.Logo ? './images/' + childCompany.Logo : ''"
+                                      x-show="childCompany.Logo"
+                                      class="h-8"
+                                    />
+                                  </th>
+                                  <td x-text="childCompany.Brand"></td>
+                                </tr>
+                              </template>
+                            </tbody>
+                          </table>
                         </div>
                       </div>
                     </template>
