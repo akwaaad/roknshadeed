@@ -56,6 +56,10 @@ $watch('lang', value => localStorage.setItem('lang', value));"
     <title x-data x-text="title[lang]"></title>
 
     <script src="scripts/fflate@0.8.2.js"></script>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/@alpinejs/resize@3.x.x/dist/cdn.min.js"
+    ></script>
     <script src="scripts/alpine.js" defer></script>
     <script src="scripts/index.js"></script>
 
@@ -274,6 +278,17 @@ $watch('lang', value => localStorage.setItem('lang', value));"
               }"
               >
                 <!-- Sidebar content here -->
+                <li
+                  x-show="width < 400"
+                  x-data="{width: 0}"
+                  x-resize.document="width = $width"
+                >
+                  <label
+                    for="my-drawer-3"
+                    aria-label="close sidebar"
+                    x-text="lang == 'ar' ? 'أغلق النافذة →' : '← Go back'"
+                  ></label>
+                </li>
                 <li>
                   <a
                     href="#"
