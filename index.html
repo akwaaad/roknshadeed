@@ -598,7 +598,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                   class="modal"
                   x-init="
                   const setSelectedCompany = ({ parent: _parent, companyOrBrand: _companyOrBrand }) => {
-                    isParent = Boolean(_parent)
+                    isParent = !Boolean(_parent)
                     parent = _parent || _companyOrBrand
                     companyOrBrand = _companyOrBrand
                     description = isArabic ? parent['Description'] : parent['Description (en)']
