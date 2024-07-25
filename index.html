@@ -248,7 +248,12 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                 aria-label="close sidebar"
                 class="drawer-overlay"
               ></label>
-              <ul class="menu p-4 w-80 min-h-full bg-base-200">
+              <ul
+                class="menu p-4 w-80 min-h-full bg-base-200"
+                x-data="{
+                showLanguages: false
+              }"
+              >
                 <!-- Sidebar content here -->
                 <li>
                   <a
@@ -265,7 +270,12 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                     x-text="lang == 'ar' ? 'تثبيت الموقع كتطبيق' : 'Install as App'"
                   ></a>
                 </li>
-                <li>
+                <li style="margin-top: auto">
+                  <a href="#" x-on:click="showLanguages = !showLanguages"
+                    >Language</a
+                  >
+                </li>
+                <li x-show="showLanguages" x-transition>
                   <a
                     href="#"
                     x-on:click="lang = 'en'"
@@ -273,7 +283,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                     >English</a
                   >
                 </li>
-                <li>
+                <li x-show="showLanguages" x-transition>
                   <a
                     href="#"
                     x-on:click="lang = 'ar'"
