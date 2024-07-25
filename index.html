@@ -680,20 +680,20 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                       >
                         <img
                           x-bind:src="'./images/' + img('Proof')[isArabic][darkMode]"
-                          class="h-8"
+                          class="h-[2.25rem]"
                         />
                       </a>
                     </p>
 
                     <template x-if="isParent && childCompanies.length > 0">
                       <div class="collapse rounded-none collapse-arrow mb-3">
-                        <input type="checkbox" class="min-h-0 h-8" />
+                        <input type="checkbox" class="min-h-0 h-[2.25rem]" />
                         <div
-                          class="collapse-title text-lg min-h-0 h-8 leading-5 font-medium p-0 after:!top-2.5"
+                          class="collapse-title text-lg min-h-0 h-[2.25rem] leading-5 font-medium p-0 after:!top-2.5"
                         >
                           <img
                             x-bind:src="'./images/' + img('P.Table')[isArabic][darkMode]"
-                            class="h-8"
+                            class="h-[2.25rem]"
                           />
                         </div>
                         <div class="collapse-content p-0">
@@ -723,13 +723,13 @@ $watch('lang', value => localStorage.setItem('lang', value));"
 
                     <template x-if="alternativeCompanies.length > 0">
                       <div class="collapse rounded-none collapse-arrow mb-3">
-                        <input type="checkbox" class="min-h-0 h-8" />
+                        <input type="checkbox" class="min-h-0 h-[2.25rem]" />
                         <div
-                          class="collapse-title text-lg min-h-0 h-8 leading-5 font-medium p-0 after:!top-2.5"
+                          class="collapse-title text-lg min-h-0 h-[2.25rem] leading-5 font-medium p-0 after:!top-2.5"
                         >
                           <img
                             x-bind:src="'./images/' + img('Alts')[isArabic][darkMode]"
-                            class="h-8"
+                            class="h-[2.25rem]"
                           />
                         </div>
                         <div class="collapse-content p-0">
@@ -777,7 +777,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                       >
                         <img
                           x-bind:src="'./images/' + img('Share')[isArabic][darkMode]"
-                          class="h-8"
+                          class="h-[2.25rem]"
                         />
                       </a>
                       <div
