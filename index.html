@@ -7,6 +7,7 @@
         en: 'Rokn Shadeed'
     },
     installable: false,
+    // when system prefers darkMode, darkMode will be activated even if lightMode is saved
     darkMode: localStorage.getItem('darkMode') === 'true' || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)
 }"
   x-init="window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
@@ -85,7 +86,6 @@ $watch('lang', value => localStorage.setItem('lang', value));"
           justify-content: center;
           align-items: center;
           height: 100vh;
-          background-color: #1c3557;
         "
       >
         <span class="loading loading-ring loading-lg"></span>
@@ -138,7 +138,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                           type="checkbox"
                           x-bind:checked="darkMode"
                           class="theme-controller"
-                          x-on:change="darkMode = $el.checked; localStorage.setItem('darkMode', $el.checked)"
+                          x-on:change="darkMode = $el.checked; debugger; localStorage.setItem('darkMode', $el.checked)"
                         />
 
                         <!-- sun icon -->
@@ -685,7 +685,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                     <p class="mb-3 tracking-wide">
                       <a
                         class="text-blue-500 font-bold"
-                        x-bind:href="parent['Proof']"
+                        x-bind:href="parent && parent['Proof']"
                         target="_blank"
                       >
                         <img
