@@ -7,8 +7,7 @@
         en: 'Rokn Shadeed'
     },
     installable: false,
-    // when system prefers darkMode, darkMode will be activated even if lightMode is saved
-    darkMode: localStorage.getItem('darkMode') === 'true' || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)
+    darkMode: localStorage.getItem('darkMode') === 'true'
 }"
   x-init="window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
     darkMode = event.matches;
