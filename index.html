@@ -271,9 +271,11 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                   ></a>
                 </li>
                 <li style="margin-top: auto">
-                  <a href="#" x-on:click="showLanguages = !showLanguages"
-                    >Language</a
-                  >
+                  <a
+                    href="#"
+                    x-on:click="showLanguages = !showLanguages"
+                    x-text="lang == 'ar' ? 'اللغة' : 'Language'"
+                  ></a>
                 </li>
                 <li x-show="showLanguages" x-transition>
                   <a
