@@ -751,7 +751,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                       </div>
                     </template>
 
-                    <div class="label mt-8" x-show="!isMobile">
+                    <div class="label" x-show="!isMobile">
                       <span class="label-text" x-show="!isArabic"
                         >Share with your friends</span
                       >
@@ -761,7 +761,6 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                     </div>
                     <div
                       class="flex"
-                      x-bind:class="isMobile ? 'mt-8' : ''"
                       x-data="{
                     isCopied: false,
                   }"
