@@ -390,7 +390,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                     parent: companyOrBrand.Brand ? data.Parent.find(row => row.Company == companyOrBrand.Company) : null,
                     brand: companyOrBrand.Brand,
                     company: companyOrBrand.Company,
-                    tier: data.Tiers.find(t => t.Tier == (companyOrBrand.Tier || data.Parent.find(row => row.Company == companyOrBrand.Company).Tier))
+                    tier: data.Tiers.find(t => t['Tier (ar)'] == (companyOrBrand.Tier || data.Parent.find(row => row.Company == companyOrBrand.Company).Tier))
                   }"
                       class="hover:bg-base-300 hover:cursor-pointer dark:border-b-[rgba(241,247,237,0.3)]"
                       x-on:click="selectedCompanyOrBrand = {parent, companyOrBrand}, detailsModal.show()"
@@ -469,20 +469,12 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                       </ul>
                     </div>
                   </div>
-                  <div
-                    x-data="{
-                    tierLevelAr: {
-                      '1st': 'درجة أولى',
-                      '2nd': 'درجة ثانية',
-                      '3rd': 'درجة ثالثة',
-                    },
-                  }"
-                  >
+                  <div>
                     <template x-for="company in companies">
                       <div
                         x-show="selectedCategory == 'All' || selectedCategory == company.Category"
                         x-data="{
-                          tier: data.Tiers.find(t => t.Tier == company.Tier)
+                          tier: data.Tiers.find(t => t['Tier (ar)'] == company.Tier)
                         }"
                         class="flex flex-col mb-4"
                       >
@@ -504,9 +496,9 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                             >
                               <span x-text="company.Company"></span>
                               <div
-                                class="badge badge-md text-white font-bold w-24"
+                                class="badge badge-md text-white font-bold w-32 h-6"
                                 x-bind:style="tierClasses"
-                                x-text="isArabic ? tierLevelAr[company.Tier] : company.Tier + ' Tier'"
+                                x-text="isArabic ? tier['Tier (ar)'] : tier['Tier (en)']"
                               ></div>
                             </div>
                           </div>
@@ -562,14 +554,8 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                 companyOrBrand: null,
                 description: null,
                 descriptionIntro: null,
-                tierDescription : null,
                 currentUrl: null,
                 tier: null,
-                tierLevelAr: {
-                  '1st': 'درجة أولى',
-                  '2nd': 'درجة ثانية',
-                  '3rd': 'درجة ثالثة',
-                },
                 img: (asset) => {
                   return {
                     // isArabic
@@ -597,8 +583,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                     companyOrBrand = _companyOrBrand
                     description = isArabic ? parent['Description'] : parent['Description (en)']
                     descriptionIntro = !isParent ? '<p>' + ((isArabic ? 'جاء عن الشركة الأم [' : 'In news about the parent company [') + parent.Company + ']</p>') : ''
-                    tier = data.Tiers.find(t => t.Tier == parent.Tier)
-                    tierDescription = tier[isArabic ? 'Description' : 'Description (en)']
+                    tier = data.Tiers.find(t => t['Tier (ar)'] == parent.Tier)
 
                     window.location.hash = companyOrBrand.Brand ? 'brand=' + companyOrBrand.Brand : 'company=' + companyOrBrand.Company
                     currentUrl = window.location.href
@@ -654,16 +639,14 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                           x-text="companyOrBrand && (companyOrBrand.Brand || parent.Company)"
                         ></h3>
                         <div
-                          class="badge badge-md text-white font-bold w-24"
+                          class="badge badge-md text-white font-bold w-32 h-6"
                           x-bind:style="tier && 'border-color:' + tier.Background + '; background-color: ' + tier.Background + '; color: ' + tier.TextColor"
-                          x-text="parent && (isArabic ? tierLevelAr[parent.Tier] : parent.Tier + ' Tier')"
+                          x-text="parent && (isArabic ? tier['Tier (ar)'] : tier['Tier (en)'])"
                         ></div>
                       </div>
                       <!-- &centerdot;
                     <span x-text="parent.Category"></span> -->
                     </div>
-
-                    <p class="mb-3 tracking-wide" x-text="tierDescription"></p>
 
                     <p class="mb-3 tracking-wide" x-html="descriptionIntro"></p>
 
@@ -861,7 +844,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
         <footer class="footer footer-center sticky top-[100vh] pb-10">
           <nav>
             <div class="flex gap-4">
-              <template x-for="link in data.Links.slice(1)">
+              <template x-for="link in data['Social Media'].slice(1)">
                 <a x-bind:href="link.Link" target="_blank">
                   <img
                     x-bind:src="'./images/' + (darkMode ? link['DM Logo'] : link.Logo)"
