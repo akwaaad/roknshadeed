@@ -526,7 +526,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                             >
                               <span x-text="company.Company"></span>
                               <div
-                                class="badge badge-md text-white font-bold w-32 h-6"
+                                class="badge badge-md text-white font-bold w-36 h-6"
                                 x-bind:style="tierClasses"
                                 x-text="isArabic ? tier['Tier (ar)'] : tier['Tier (en)']"
                               ></div>
@@ -669,7 +669,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                           x-text="companyOrBrand && (companyOrBrand.Brand || parent.Company)"
                         ></h3>
                         <div
-                          class="badge badge-md text-white font-bold w-32 h-6"
+                          class="badge badge-md text-white font-bold w-36 h-6"
                           x-bind:style="tier && 'border-color:' + tier.Background + '; background-color: ' + tier.Background + '; color: ' + tier.TextColor"
                           x-text="parent && (isArabic ? tier['Tier (ar)'] : tier['Tier (en)'])"
                         ></div>
