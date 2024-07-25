@@ -79,7 +79,17 @@ $watch('lang', value => localStorage.setItem('lang', value));"
 
   <body class="container mx-auto min-h-screen" x-data="app">
     <template x-if="!loaded">
-      <h1>Loading...</h1>
+      <div
+        style="
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+          background-color: #1c3557;
+        "
+      >
+        <span class="loading loading-ring loading-lg"></span>
+      </div>
     </template>
     <template x-if="loaded">
       <div
