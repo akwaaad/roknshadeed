@@ -389,7 +389,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                       <td
                         class="flex justify-end items-center"
                         x-data="{
-                          tierClasses: 'border-color:' + tier.Background + '; background-color: ' + tier.Background + '; color: ' + tier.TextColor,
+                          tierClasses: tier && 'border-color:' + tier.Background + '; background-color: ' + tier.Background + '; color: ' + tier.TextColor,
                         }"
                       >
                         <div
@@ -487,7 +487,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                             <div
                               class="flex flex-col"
                               x-data="{
-                                tierClasses: 'border-color:' + tier.Background + '; background-color: ' + tier.Background + '; color: ' + tier.TextColor,
+                                tierClasses: tier && 'border-color:' + tier.Background + '; background-color: ' + tier.Background + '; color: ' + tier.TextColor,
                               }"
                             >
                               <span x-text="company.Company"></span>
@@ -630,7 +630,7 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                         ></h3>
                         <div
                           class="badge badge-md text-white font-bold w-24"
-                          x-bind:style="'border-color:' + tier.Background + '; background-color: ' + tier.Background + '; color: ' + tier.TextColor"
+                          x-bind:style="tier && 'border-color:' + tier.Background + '; background-color: ' + tier.Background + '; color: ' + tier.TextColor"
                           x-text="parent && (isArabic ? tierLevelAr[parent.Tier] : parent.Tier + ' Tier')"
                         ></div>
                       </div>
@@ -682,9 +682,28 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                       <div class="collapse rounded-none collapse-arrow">
                         <input type="checkbox" class="min-h-0 h-7" />
                         <div
-                          class="collapse-title text-lg min-h-0 h-7 leading-5 font-medium p-0 after:!top-2.5"
-                          x-text="isArabic ? 'الشركات البديلة' : 'Alternative Companies'"
-                        ></div>
+                          class="collapse-title text-lg min-h-0 h-10 leading-5 font-medium p-0 after:!top-[1.5rem]"
+                          x-data="{
+                            img: {
+                              // isArabic
+                              true: { 
+                                // darkMode
+                                true: data.Essentials.find(e => e.Keyword == 'Alts B').Value,
+                                false: data.Essentials.find(e => e.Keyword == 'P.Page L').Value,
+                              },
+                              false: {
+                                // darkMode
+                                true: data.Essentials.find(e => e.Keyword == 'E.Alts B').Value,
+                                false: data.Essentials.find(e => e.Keyword == 'E.Alts L').Value,
+                              }
+                            }
+                          }"
+                        >
+                          <img
+                            x-bind:src="'./images/' + img[isArabic][darkMode]"
+                            class="h-10"
+                          />
+                        </div>
                         <div class="collapse-content p-0">
                           <div class="overflow-x-auto">
                             <table class="table table-zebra">
