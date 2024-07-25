@@ -1,6 +1,6 @@
 // Register service worker to control making site work offline
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("/roknshadeed/scripts/sw.js").then(() => {
+  navigator.serviceWorker.register("/scripts/sw.js").then(() => {
     console.log("Service Worker Registered");
   });
 }
