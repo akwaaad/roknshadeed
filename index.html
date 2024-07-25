@@ -111,6 +111,16 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                         x-on:click="browseByCategoryModal.show()"
                       ></a>
                     </li>
+                    <template x-for="link in data.Links.slice(1)">
+                      <li>
+                        <a
+                          x-bind:href="link.Link"
+                          x-text="lang == 'ar' ? link['Name (ar)'] : link['Name (en)']"
+                          target="_blank"
+                        >
+                        </a>
+                      </li>
+                    </template>
                     <li>
                       <label class="swap swap-rotate">
                         <!-- this hidden checkbox controls the state -->
@@ -270,6 +280,16 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                     x-text="lang == 'ar' ? 'تثبيت الموقع كتطبيق' : 'Install as App'"
                   ></a>
                 </li>
+                <template x-for="link in data.Links.slice(1)">
+                  <li>
+                    <a
+                      x-bind:href="link.Link"
+                      x-text="lang == 'ar' ? link['Name (ar)'] : link['Name (en)']"
+                      target="_blank"
+                    >
+                    </a>
+                  </li>
+                </template>
                 <li style="margin-top: auto">
                   <a
                     href="#"
