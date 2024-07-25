@@ -24,7 +24,6 @@ function showInAppInstallPromotion() {
   if (!isMobile) return;
   Alpine.store("installable", true);
 }
-
 document.addEventListener("alpine:init", () => {
   Alpine.store("installable", false);
   Alpine.data("app", () => {
@@ -43,6 +42,7 @@ document.addEventListener("alpine:init", () => {
           const decompressed = fflate.strFromU8(data);
           data = JSON.parse(decompressed);
 
+          window.data = data;
           this.data = data;
           this.loaded = true;
         });

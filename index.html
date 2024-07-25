@@ -550,7 +550,6 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                 companyOrBrand: null,
                 description: null,
                 descriptionIntro: null,
-                descriptionOutro: null,
                 tierDescription : null,
                 currentUrl: null,
                 tier: null,
@@ -560,13 +559,12 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                   '3rd': 'درجة ثالثة',
                 },
                 img: (asset) => {
-                  console.log(data.Essentials.find(e => e.Keyword == `${asset} B`))
                   return {
                     // isArabic
                     true: { 
                       // darkMode
                       true: data.Essentials.find(e => e.Keyword == `${asset} B`).Value,
-                      false: data.Essentials.find(e => e.Keyword == `P.${asset} L`).Value,
+                      false: data.Essentials.find(e => e.Keyword == `${asset} L`).Value,
                     },
                     false: {
                       // darkMode
@@ -587,7 +585,6 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                     companyOrBrand = _companyOrBrand
                     description = isArabic ? parent['Description'] : parent['Description (en)']
                     descriptionIntro = !isParent ? '<p>' + ((isArabic ? 'جاء عن الشركة الأم [' : 'In news about the parent company [') + parent.Company + ']</p>') : ''
-                    descriptionOutro = '<p><a class=\'text-blue-500 font-bold\' href=' + parent['Proof'] + '>' + (isArabic ? 'المصدر' : 'Source') + '</a></p>'
                     tier = data.Tiers.find(t => t.Tier == parent.Tier)
                     tierDescription = tier[isArabic ? 'Description' : 'Description (en)']
 
@@ -660,7 +657,17 @@ $watch('lang', value => localStorage.setItem('lang', value));"
 
                     <p class="mb-3 tracking-wide" x-html="description"></p>
 
-                    <p class="mb-3 tracking-wide" x-html="descriptionOutro"></p>
+                    <p class="mb-3 tracking-wide">
+                      <a
+                        class="text-blue-500 font-bold"
+                        x-bind:href="parent['Proof']"
+                      >
+                        <img
+                          x-bind:src="'./images/' + img('Proof')[isArabic][darkMode]"
+                          class="h-10"
+                        />
+                      </a>
+                    </p>
 
                     <template x-if="isParent && childCompanies.length > 0">
                       <div class="collapse rounded-none collapse-arrow">
@@ -668,11 +675,11 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                         <div
                           class="collapse-title text-lg min-h-0 h-10 leading-5 font-medium p-0 after:!top-2.5"
                         >
-                        <img
-                          x-bind:src="'./images/' + img('P.Table')[isArabic][darkMode]"
-                          class="h-10"
-                        />
-                      </div>
+                          <img
+                            x-bind:src="'./images/' + img('P.Table')[isArabic][darkMode]"
+                            class="h-10"
+                          />
+                        </div>
                         <div class="collapse-content p-0">
                           <div class="overflow-x-auto">
                             <table class="table table-zebra">
@@ -751,10 +758,13 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                     >
                       <a
                         x-on:click="navigator.share({ title: companyOrBrand.Brand || parent.Company, text: description, url: currentUrl })"
-                        class="btn btn-primary"
                         x-show="isMobile"
-                        x-text="isArabic ? 'مشاركة' : 'Share'"
-                      ></a>
+                      >
+                        <img
+                          x-bind:src="'./images/' + img('Share')[isArabic][darkMode]"
+                          class="h-10"
+                        />
+                      </a>
                       <div
                         x-show="!isMobile"
                         class="tooltip"
