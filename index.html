@@ -558,7 +558,23 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                   '1st': 'درجة أولى',
                   '2nd': 'درجة ثانية',
                   '3rd': 'درجة ثالثة',
-                }
+                },
+                img: (asset) => {
+                  console.log(data.Essentials.find(e => e.Keyword == `${asset} B`))
+                  return {
+                    // isArabic
+                    true: { 
+                      // darkMode
+                      true: data.Essentials.find(e => e.Keyword == `${asset} B`).Value,
+                      false: data.Essentials.find(e => e.Keyword == `P.${asset} L`).Value,
+                    },
+                    false: {
+                      // darkMode
+                      true: data.Essentials.find(e => e.Keyword == `E.${asset} B`).Value,
+                      false: data.Essentials.find(e => e.Keyword == `E.${asset} L`).Value,
+                    }
+                  }
+                },
               }"
               >
                 <dialog
@@ -566,7 +582,6 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                   class="modal"
                   x-init="
                   const setSelectedCompany = ({ parent: _parent, companyOrBrand: _companyOrBrand }) => {
-                    console.log({_parent, _companyOrBrand})
                     isParent = Boolean(_parent)
                     parent = _parent || _companyOrBrand
                     companyOrBrand = _companyOrBrand
@@ -590,15 +605,16 @@ $watch('lang', value => localStorage.setItem('lang', value));"
                   if (urlFragment) {
                     const [type, name] = urlFragment.split('=');
                     if (type === 'brand' || type === 'company') {
-                      const matches = findClosestMatches(
-                        name,
-                        data.Parent.slice(1).concat(data.Brands.slice(1)),
-                        companyOrBrand => companyOrBrand.Brand || companyOrBrand.Company
-                      );
-                      if (matches.length > 0) {
+                      let match;
+                      if (type == 'brand') {
+                        match = data.Brands.slice(1).find(b => b.Brand == name)
+                      } else {
+                        match = data.Parent.slice(1).find(p => p.Company == name)
+                      }
+                      if (match) {
                         setSelectedCompany({
-                          parent: matches[0].Brand ? data.Parent.find(row => row.Company == matches[0].Company) : null,
-                          companyOrBrand: matches[0]
+                          parent: match.Brand ? data.Parent.find(row => row.Company == match.Company) : null,
+                          companyOrBrand: match
                         });
                         $el.show()
                       }
@@ -648,11 +664,15 @@ $watch('lang', value => localStorage.setItem('lang', value));"
 
                     <template x-if="isParent && childCompanies.length > 0">
                       <div class="collapse rounded-none collapse-arrow">
-                        <input type="checkbox" class="min-h-0 h-7" />
+                        <input type="checkbox" class="min-h-0 h-10" />
                         <div
-                          class="collapse-title text-lg min-h-0 h-7 leading-5 font-medium p-0 after:!top-2.5"
-                          x-text="isArabic ? 'الشركات الفرعية' : 'Child Companies'"
-                        ></div>
+                          class="collapse-title text-lg min-h-0 h-10 leading-5 font-medium p-0 after:!top-2.5"
+                        >
+                        <img
+                          x-bind:src="'./images/' + img('P.Table')[isArabic][darkMode]"
+                          class="h-10"
+                        />
+                      </div>
                         <div class="collapse-content p-0">
                           <div class="overflow-x-auto">
                             <table class="table table-zebra">
@@ -680,27 +700,12 @@ $watch('lang', value => localStorage.setItem('lang', value));"
 
                     <template x-if="alternativeCompanies.length > 0">
                       <div class="collapse rounded-none collapse-arrow">
-                        <input type="checkbox" class="min-h-0 h-7" />
+                        <input type="checkbox" class="min-h-0 h-10" />
                         <div
-                          class="collapse-title text-lg min-h-0 h-10 leading-5 font-medium p-0 after:!top-[1.5rem]"
-                          x-data="{
-                            img: {
-                              // isArabic
-                              true: { 
-                                // darkMode
-                                true: data.Essentials.find(e => e.Keyword == 'Alts B').Value,
-                                false: data.Essentials.find(e => e.Keyword == 'P.Page L').Value,
-                              },
-                              false: {
-                                // darkMode
-                                true: data.Essentials.find(e => e.Keyword == 'E.Alts B').Value,
-                                false: data.Essentials.find(e => e.Keyword == 'E.Alts L').Value,
-                              }
-                            }
-                          }"
+                          class="collapse-title text-lg min-h-0 h-10 leading-5 font-medium p-0 after:!top-2.5"
                         >
                           <img
-                            x-bind:src="'./images/' + img[isArabic][darkMode]"
+                            x-bind:src="'./images/' + img('Alts')[isArabic][darkMode]"
                             class="h-10"
                           />
                         </div>
