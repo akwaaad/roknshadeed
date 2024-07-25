@@ -10,7 +10,6 @@ self.addEventListener("install", (e) => {
           "/scripts/alpine.js",
           "/scripts/resize.min.js",
           "/scripts/fflate@0.8.2.js",
-          "/styles/daisy.min.css",
           "/styles/styles.min.css",
           "/favicon.ico",
           "/data.json",
